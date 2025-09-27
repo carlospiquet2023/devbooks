@@ -630,6 +630,15 @@ resource "aws_instance" "web" {
                 <p><strong>Dicas para Mestres Linux:</strong> Sempre use SELinux/AppArmor, mantenha sistemas atualizados, faça backups regulares. Participe da comunidade: LKML, Reddit r/linux, conferências como Linux Plumbers.</p>
             </section>
 
+            <section id="advanced-resources">
+                <h2>Recursos para Mestres Linux: Administração Avançada</h2>
+                <p>Gerencie sistemas em produção: containers, orquestração, monitoramento e segurança.</p>
+                <button id="load-examples" class="bg-purple-500 text-white px-4 py-2 rounded mt-4">Carregar Exemplos</button>
+                <div id="examples-container" class="mt-4 hidden">
+                    <!-- Exemplos serão carregados aqui -->
+                </div>
+            </section>
+
             <section id="quiz">
                 <h2>Quiz de Mestre Linux</h2>
                 <div id="quiz-container"></div>
@@ -931,6 +940,52 @@ resource "aws_instance" "web" {
         document.getElementById('close-modal').addEventListener('click', () => {
             document.getElementById('result-modal').classList.add('hidden');
         });
+
+        // Carregar exemplos de administração avançada
+        document.getElementById('load-examples').addEventListener('click', () => {
+            const container = document.getElementById('examples-container');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                container.innerHTML = `
+                    <h3 class="text-lg font-semibold mb-4">Exemplos de Administração Avançada</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                            <h4 class="font-semibold">Docker Container Básico</h4>
+                            <pre class="bg-gray-900 text-white p-2 rounded text-sm mt-2"><code>FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y nginx
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]</code></pre>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                            <h4 class="font-semibold">Script de Monitoramento com Prometheus</h4>
+                            <pre class="bg-gray-900 text-white p-2 rounded text-sm mt-2"><code>#!/bin/bash
+# Verificar uso de CPU
+cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\\([0-9.]*\\)%* id.*/\\1/" | awk '{print 100 - $1}')
+echo "CPU Usage: $cpu_usage%"
+
+# Verificar uso de memória
+mem_usage=$(free | grep Mem | awk '{printf "%.2f", $3/$2 * 100.0}')
+echo "Memory Usage: $mem_usage%"</code></pre>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                            <h4 class="font-semibold">Configuração SELinux</h4>
+                            <pre class="bg-gray-900 text-white p-2 rounded text-sm mt-2"><code># Verificar status do SELinux
+sestatus
+
+# Mudar modo para permissive
+sudo setenforce 0
+
+# Configurar política
+sudo semanage fcontext -a -t httpd_sys_content_t "/var/www/html(/.*)?"
+sudo restorecon -Rv /var/www/html</code></pre>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+
         const menuButton = document.getElementById('menu-button');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
