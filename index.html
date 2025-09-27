@@ -695,9 +695,9 @@ int main(void) {
             // Se o editor existir e a página for a do leitor/editor, garantir resize e focus
             try {
                 if (typeof editor !== 'undefined' && (pageId === 'book-reader' || pageId === 'editor')) {
-                    setTimeout(() => { editor.resize(); try { editor.focus(); } catch (e) {} }, 120);
+                    setTimeout(() => { editor.resize(); try { editor.focus(); } catch (e) { console.warn('editor.focus failed:', e); } }, 120);
                 }
-            } catch (e) { /* ignore */ }
+                } catch (e) { console.warn('Failed to show page and focus editor:', e); }
         };
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -765,10 +765,10 @@ int main(void) {
                 });
                 editor.setValue(`#include <stdio.h>\n\nint main(void) {\n    printf("Olá, Mundo!\\n");\n    return 0;\n}`);
                 editor.resize();
-                try { editor.focus(); } catch (e) { /* ignore */ }
-            } catch (e) {
-                console.warn('Ace load failed, falling back to textarea:', e);
-            }
+                try { editor.focus(); } catch (e) { console.warn('editor.focus failed:', e); }
+                } catch (e) {
+                    console.warn('Ace load failed, falling back to textarea:', e);
+                }
         }
         // Fallback: criar textarea simples caso Ace não esteja disponível ou tenha falhado
         if (!editor) {
@@ -816,20 +816,23 @@ int main(void) {
 
                 // 1) Construir mapa simples de variáveis (int/float/char/const char* / char*) com literais
                 const varMap = {};
+                // Helper: parse assignments of simple literals
                 const assignRegex = /(int|long|short|float|double|char|const\s+char\s*\*|char\s*\*)\s+([A-Za-z_]\w*)\s*=\s*([^;]+);/g;
+                function parseAssignmentValue(val) {
+                    val = val.trim();
+                    const strLit = val.match(/^"((?:\\.|[^"\\])*)"$/s);
+                    if (strLit) return unescapeCStr(strLit[1]);
+                    const charLit = val.match(/^'((?:\\.|[^'\\])*)'$/s);
+                    if (charLit) return unescapeCStr(charLit[1]);
+                    const numLit = val.match(/^([-+]?\d+(?:\.\d+)?)/);
+                    if (numLit) return numLit[1];
+                    return undefined;
+                }
                 let am;
                 while ((am = assignRegex.exec(codeText)) !== null) {
                     const name = am[2];
-                    let val = am[3].trim();
-                    // string literal
-                    let sm = val.match(/^"((?:\\.|[^"\\])*)"$/s);
-                    if (sm) { varMap[name] = unescapeCStr(sm[1]); continue; }
-                    // char literal
-                    let cm = val.match(/^'((?:\\.|[^'\\])*)'$/s);
-                    if (cm) { varMap[name] = unescapeCStr(cm[1]); continue; }
-                    // numeric literal
-                    let nm = val.match(/^([-+]?[0-9]+(?:\.[0-9]+)?)/);
-                    if (nm) { varMap[name] = nm[1]; continue; }
+                    const parsed = parseAssignmentValue(am[3]);
+                    if (parsed !== undefined) varMap[name] = parsed;
                 }
 
                 // Parser simples de argumentos: separa por vírgulas, respeitando strings e parênteses
@@ -883,11 +886,11 @@ int main(void) {
                             const cm = a.match(/^'((?:\\.|[^'\\])*)'$/s);
                             if (cm) return unescapeCStr(cm[1]);
                             // numeric literal
-                            const nm = a.match(/^([-+]?[0-9]+(?:\.[0-9]+)?)/);
+                            const nm = a.match(/^([-+]?\d+(?:\.\d+)?)/);
                             if (nm) return nm[1];
                             // identifier variable
                             const id = a.match(/^([A-Za-z_]\w*)$/);
-                            if (id && varMap.hasOwnProperty(id[1])) return varMap[id[1]];
+                            if (id && Object.prototype.hasOwnProperty.call(varMap, id[1])) return varMap[id[1]];
                             return '[?]';
                         }
                         // substituir especificadores na ordem
