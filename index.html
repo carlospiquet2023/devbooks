@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Sua Biblioteca Técnica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Heroicons removed to avoid CORS issues when opening file:// locally. Use inline SVGs or host icons locally for production. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+             color: #1f2937;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+           color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                    <svg id="theme-icon-light" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="theme-icon-dark" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4">Sua Biblioteca de Conhecimento Técnico</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Livros e guias detalhados para aprofundar suas habilidades de desenvolvimento.</p>
+                <div id="progress-section" class="mt-8 bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg max-w-md mx-auto">
+                    <h3 class="text-xl font-bold mb-4">Seu Progresso</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between"><span>Páginas Visitadas:</span> <span id="pages-visited">0/7</span></div>
+                        <div class="flex justify-between"><span>Quizzes Completados:</span> <span id="quizzes-completed">0/7</span></div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="progress-text" class="text-sm text-gray-600 dark:text-gray-400">Continue explorando para avançar!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold mb-8">Em Destaque</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- C Language Book Card -->
+                    <div class="book-card-container">
+                         <a href="#" data-page="book-reader" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-blue-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    <span class="text-9xl font-black text-gray-500 dark:text-gray-700 group-hover:text-blue-500 transition-colors">C</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Compêndio sobre a Linguagem C</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">De Fundamentos à Maestria</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Placeholder for more books -->
+                    <div class="book-card-container">
+                        <a href="segundo.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Sistemas Operacionais — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-blue-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+                                        <path d="M12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill-opacity="0.12" />
+                                    </svg>
+                                    <span class="text-6xl font-black text-gray-500 dark:text-gray-700 group-hover:text-blue-500 transition-colors">SO</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Sistemas Operacionais</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">C e o kernel — Leituras recomendadas</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- C++ Book Card -->
+                    <div class="book-card-container">
+                        <a href="terceiro.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="C++ — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-purple-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10,9 9,9 8,9"/>
+                                    </svg>
+                                    <span class="text-6xl font-black text-gray-500 dark:text-gray-700 group-hover:text-purple-500 transition-colors">C++</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Evolução para C++</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">Orientação a objetos e recursos avançados</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Algorithms Book Card -->
+                    <div class="book-card-container">
+                        <a href="quarto.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Algoritmos — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-yellow-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                    </svg>
+                                    <span class="text-4xl font-black text-gray-500 dark:text-gray-700 group-hover:text-yellow-500 transition-colors">ALGO</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Prática e Algoritmos</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">Estruturas de dados e resolução de problemas</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Production Book Card -->
+                    <div class="book-card-container">
+                        <a href="quinto.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Produção — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-green-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-4xl font-black text-gray-500 dark:text-gray-700 group-hover:text-green-500 transition-colors">PROD</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Aplicações Reais</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">Ferramentas e produção de software</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Specialization Book Card -->
+                    <div class="book-card-container">
+                        <a href="sexto.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Especialização e Carreira — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-purple-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-4xl font-black text-gray-500 dark:text-gray-700 group-hover:text-purple-500 transition-colors">EXP</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Especialização e Carreira</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">Domínios avançados e profissionalismo</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <!-- Master Book Card -->
+                    <div class="book-card-container">
+                        <a href="setimo.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Mestre em C — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-red-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-3xl font-black text-gray-500 dark:text-gray-700 group-hover:text-red-500 transition-colors">MASTER</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Mestre em C</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">Arquitetura, inovação e liderança</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+             <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 fixed h-full overflow-y-auto transition-transform -translate-x-full lg:translate-x-0 z-20" aria-label="Sumário do livro">
+                    <a href="#" data-page="home" class="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:underline mb-6">
+                        &larr; Voltar para a Biblioteca
+                    </a>
+                    <h1 class="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">Compêndio de C</h1>
+                    <nav id="table-of-contents" class="space-y-4" aria-label="Sumário do livro">
+                        <!-- Navigation content is dynamically inserted here by JS -->
+                    </nav>
+                </aside>
+                
+                <!-- Main Content -->
+                <div class="flex-1 lg:ml-72">
+                    <main id="book-main-content" class="max-w-4xl mx-auto px-6 py-10">
+                        <button id="menu-button" class="lg:hidden fixed top-20 left-4 z-30 p-2 bg-white dark:bg-gray-800 rounded-md shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        </button>
+        
+                        <article id="book-content-container" class="book-content prose prose-lg max-w-none">
+                            <!-- Book content is dynamically inserted here by JS -->
+                        </article>
+                    </main>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+    
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Um Compêndio de Especialista sobre a Linguagem de Programação C",
+        parts: [
+            { title: "Parte I: Fundamentos", sections: [{ id: "sec1", title: "A Gênese e o Legado" }, { id: "sec2", title: "Anatomia de um Programa" }] },
+            { title: "Parte II: Estruturas e Funções", sections: [{ id: "sec3", title: "Fluxo de Execução" }, { id: "sec4", title: "Funções e Modularização" }] },
+            { title: "Parte III: Ponteiros e Memória", sections: [{ id: "sec5", title: "Desmistificando Ponteiros" }, { id: "sec6", title: "Alocação Dinâmica" }] },
+            { title: "Parte IV: Dados Complexos", sections: [{ id: "sec7", title: "Tipos Agregados" }, { id: "sec8", title: "Estruturas Dinâmicas" }] },
+            { title: "Parte V: Ecossistema e Prática", sections: [{ id: "sec9", title: "Ferramentas Essenciais" }, { id: "sec10", title: "Programação de Sistema" }] },
+            { title: "Parte VI: Rumo à Maestria", sections: [{ id: "sec11", title: "Evolução do Padrão C" }, { id: "sec12", title: "Roteiro para o Especialista" }] },
+            { title: "Parte VII: Tópicos Avançados", sections: [{ id: "sec13", title: "Concorrência e Multithreading" }, { id: "sec14", title: "Otimização e Performance" }, { id: "sec15", title: "Padrões de Design em C" }, { id: "sec16", title: "Integração com Outras Linguagens" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual é a função principal em um programa C?",
+                options: ["start()", "main()", "begin()", "init()"],
+                answer: 1
+            },
+            {
+                question: "O que significa 'C' em linguagem C?",
+                options: ["Computer", "Code", "C Programming", "Nenhuma das acima"],
+                answer: 3
+            },
+            {
+                question: "Qual operador é usado para acessar o endereço de uma variável em C?",
+                options: ["*", "&", "%", "#"],
+                answer: 1
+            },
+            {
+                question: "Qual é a diferença entre struct e union em C?",
+                options: ["Struct aloca memória para todos os membros, union para o maior", "Union aloca para todos, struct para o maior", "São idênticos", "Struct é para arrays, union para ponteiros"],
+                answer: 0
+            },
+            {
+                question: "O que faz a função malloc()?",
+                options: ["Libera memória", "Aloca memória dinâmica", "Copia strings", "Compara valores"],
+                answer: 1
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Um Compêndio de Especialista sobre a Linguagem C</h1></header>
+            
+            <section id="part1">
+                <h2>Parte I: Fundamentos de uma Linguagem Fundamental</h2>
+                <section id="sec1">
+                    <h3>A Gênese e o Legado da C</h3>
+                    <h4>O Nascimento nos Bell Labs</h4>
+                    <p>A linguagem C nasceu da necessidade no início dos anos 70 nos Bell Labs. Ken Thompson e Dennis Ritchie precisavam de uma ferramenta melhor para desenvolver o sistema operacional UNIX em hardware com recursos limitados. A C evoluiu da linguagem B, adicionando um sistema de tipos e outras funcionalidades, tornando-se a ferramenta ideal para reescrever o kernel do UNIX, que anteriormente era em Assembly. Esta origem pragmática ditou sua filosofia: ser uma linguagem de baixo nível, eficiente e próxima do hardware.</p>
+                    <h4>O Livro "K&R" e a Padronização</h4>
+                    <p>Em 1978, a publicação de "The C Programming Language" por Brian Kernighan e Dennis Ritchie (K&R) foi um marco. O livro não apenas popularizou a C, mas também serviu como seu padrão de facto por anos, estabelecendo um estilo de programação conciso que influenciou gerações. A C se tornou a "língua franca" da programação, com sua sintaxe e filosofia servindo de base para linguagens como C++, Java, C#, Python e muitas outras.</p>
+                </section>
+                <section id="sec2">
+                     <h3>Anatomia de um Programa em C</h3>
+                    <h4>Estrutura Mínima</h4>
+                    <p>Todo programa C executável precisa de uma função <code>main</code>, o ponto de entrada da execução. O exemplo canônico "Olá, Mundo!" ilustra os componentes essenciais:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(void) {
+    // printf é uma função da biblioteca padrão para imprimir no console.
+    printf("Olá, Mundo!\\n"); 
+    return 0; // Retorno 0 indica sucesso na execução.
+}
+                    </code></pre>
+                    <p><code>#include &lt;stdio.h&gt;</code> é uma diretiva do pré-processador que inclui a biblioteca de entrada/saída padrão. As chaves <code>{}</code> delimitam o corpo da função, e cada instrução termina com ponto e vírgula <code>;</code>.</p>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Escreva um programa em C que imprime "Olá, Mundo!" na tela.</li>
+                    <li>Explique a diferença entre <code>printf</code> e <code>puts</code>.</li>
+                    <li>Compile e execute o programa "Olá, Mundo!" usando um compilador C.</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: O Arsenal do Programador - Estruturas de Controle e Funções</h2>
+                <section id="sec3">
+                    <h3>Dominando o Fluxo de Execução</h3>
+                    <h4>Decisões e Laços</h4>
+                    <p>C fornece um conjunto padrão de estruturas para controlar o fluxo de execução. <code>if-else</code> para decisões, <code>switch</code> para seleções múltiplas e <code>for</code>, <code>while</code>, <code>do-while</code> para laços de repetição.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">for (int i = 0; i < 5; i++) {
+    if (i % 2 == 0) {
+        printf("%d é par.\\n", i);
+    } else {
+        printf("%d é ímpar.\\n", i);
+    }
+}
+                    </code></pre>
+                    <p>As palavras-chave <code>break</code> e <code>continue</code> oferecem controle fino dentro dos laços, permitindo sair do laço prematuramente ou pular para a próxima iteração, respectivamente.</p>
+                </section>
+                 <section id="sec4">
+                    <h3>Funções e Modularização</h3>
+                     <h4>Blocos de Código Reutilizáveis</h4>
+                    <p>Funções são o pilar da modularidade em C. Elas permitem que o código seja organizado, reutilizado e testado de forma isolada. Uma função tem um tipo de retorno, um nome e uma lista de parâmetros.</p>
+                    <h4>Passagem por Valor vs. Referência (Simulada)</h4>
+                    <p>Por padrão, C passa argumentos para funções <strong>por valor</strong> (uma cópia é feita). Para permitir que uma função modifique a variável original do chamador, usamos ponteiros para simular a <strong>passagem por referência</strong>, passando o endereço da variável em vez de seu valor.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">void incrementa(int *num) {
+    (*num)++; // Incrementa o valor no endereço apontado por num
+}
+
+int main(void) {
+    int x = 10;
+    incrementa(&x); // Passa o endereço de x
+    printf("Novo valor de x: %d\\n", x); // Imprime 11
+    return 0;
+}
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Escreva uma função que calcula o fatorial de um número usando recursão.</li>
+                    <li>Implemente um loop que imprime os números pares de 1 a 20.</li>
+                    <li>Crie uma função que troca o valor de duas variáveis usando ponteiros.</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                 <h2>Parte III: O Coração da C - Ponteiros e Gestão de Memória</h2>
+                <section id="sec5">
+                    <h3>Desmistificando Ponteiros</h3>
+                    <h4>Variáveis que Armazenam Endereços</h4>
+                    <p>Um ponteiro é uma variável que armazena o endereço de memória de outra variável. Eles são a característica mais poderosa da C, permitindo manipulação direta da memória. O operador <code>&</code> obtém o endereço de uma variável, e o operador <code>*</code> (dereferenciação) acessa o valor no endereço para o qual um ponteiro aponta.</p>
+                    <h4>Aritmética de Ponteiros</h4>
+                    <p>A aritmética de ponteiros é dimensionada pelo tamanho do tipo de dados que ele aponta. Incrementar um ponteiro de inteiro (<code>int *p</code>) o avança por <code>sizeof(int)</code> bytes na memória, tornando a navegação em arrays eficiente e natural.</p>
+                </section>
+                <section id="sec6">
+                    <h3>Alocação Dinâmica de Memória</h3>
+                    <h4>A Stack vs. a Heap</h4>
+                    <p>A memória é dividida principalmente em <strong>Stack</strong> (para variáveis locais, gerenciada automaticamente) e <strong>Heap</strong> (uma grande reserva de memória para alocação manual em tempo de execução). Usar a Heap é essencial quando o tamanho dos dados é desconhecido em tempo de compilação.</p>
+                    <h4><code>malloc</code>, <code>calloc</code>, <code>realloc</code> e <code>free</code></h4>
+                    <p>A biblioteca <code>&lt;stdlib.h&gt;</code> fornece funções para gerenciar a Heap: <code>malloc</code> para alocar um bloco de memória, <code>calloc</code> para alocar e zerar, e <code>realloc</code> para redimensionar. É responsabilidade do programador liberar a memória alocada com <code>free</code> para evitar vazamentos de memória (memory leaks).</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">int *arr = (int*) malloc(10 * sizeof(int));
+if (arr == NULL) { /* Tratar falha de alocação */ }
+// ... usar o array ...
+free(arr); // Liberar a memória quando não for mais necessária.
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="exercises3">
+                <h2>Exercícios Práticos - Parte III</h2>
+                <ol>
+                    <li>Implemente uma função que aloca dinamicamente um array de inteiros e o preenche com valores.</li>
+                    <li>Escreva um programa que demonstra o uso de ponteiros para acessar elementos de um array.</li>
+                    <li>Identifique e corrija um possível vazamento de memória no código fornecido.</li>
+                </ol>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Estruturando Dados Complexos</h2>
+                <section id="sec7">
+                    <h3>Tipos de Dados Agregados</h3>
+                    <h4><code>struct</code>, <code>union</code>, e <code>enum</code></h4>
+                    <p>C permite criar tipos de dados personalizados: <strong><code>struct</code></strong> para agrupar múltiplas variáveis (mesmo de tipos diferentes) em uma única unidade; <strong><code>union</code></strong> para armazenar diferentes tipos de dados no mesmo local de memória (um de cada vez); e <strong><code>enum</code></strong> para criar conjuntos de constantes inteiras nomeadas, melhorando a legibilidade.</p>
+                </section>
+                <section id="sec8">
+                    <h3>Estruturas de Dados Dinâmicas</h3>
+                    <h4>Construindo com Blocos</h4>
+                    <p>A combinação de <code>struct</code>, ponteiros e alocação dinâmica é a chave para criar estruturas de dados avançadas como listas ligadas, pilhas, filas, árvores e grafos. Uma lista ligada, por exemplo, é implementada com uma estrutura que contém dados e um ponteiro para o próximo nó.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">typedef struct No {
+    int valor;
+    struct No *proximo;
+} No;
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="part5">
+                <h2>Parte V: O Ecossistema e a Prática Avançada</h2>
+                <section id="sec9">
+                    <h3>Ferramentas Essenciais do Ofício</h3>
+                    <h4>Além do Código</h4>
+                    <p>Um desenvolvedor C eficaz domina o ecossistema: o <strong>pré-processador</strong> (para macros com <code>#define</code> e compilação condicional), <strong>Makefiles</strong> (para automatizar o processo de compilação em projetos complexos) e <strong>debuggers</strong> como o GDB (para inspecionar a execução do programa e encontrar bugs).</p>
+                </section>
+                <section id="sec10">
+                    <h3>Programação de Sistema</h3>
+                    <h4>Interagindo com o SO</h4>
+                    <p>A C brilha na programação de sistema. Isso inclui a <strong>entrada/saída de arquivos</strong> (usando funções como <code>fopen</code>, <code>fread</code>, <code>fwrite</code>, <code>fclose</code> da <code>&lt;stdio.h&gt;</code>) e a organização de projetos em múltiplos <strong>arquivos-fonte (.c)</strong> e <strong>cabeçalhos (.h)</strong>. Os cabeçalhos declaram a interface (protótipos de funções, tipos), enquanto os arquivos-fonte contêm a implementação, promovendo a organização e a compilação separada.</p>
+                </section>
+            </section>
+
+            <section id="part6">
+                <h2>Parte VI: Rumo à Maestria</h2>
+                <section id="sec11">
+                    <h3>A Evolução do Padrão C</h3>
+                    <h4>Uma Linguagem Viva</h4>
+                    <p>A C não é uma linguagem estática. Ela foi formalmente padronizada e evoluiu ao longo do tempo. Os principais padrões são <strong>ANSI C (C89/C90)</strong>, o primeiro padrão formal; <strong>C99</strong>, que adicionou recursos modernos como comentários <code>//</code> e tipos de inteiros de largura fixa; <strong>C11</strong>, que introduziu suporte a multithreading; e o mais recente, <strong>C23</strong>, que continua a modernizar a linguagem.</p>
+                </section>
+                <section id="sec12">
+                    <h3>Um Roteiro para o Especialista</h3>
+                    <h4>A Jornada Contínua</h4>
+                    <p>Atingir a maestria em C exige prática e estudo contínuos. O caminho inclui:</p>
+                    <ul>
+                        <li><strong>Estudar código-fonte de qualidade:</strong> Analisar projetos como o kernel do Linux, Git ou SQLite para aprender com os mestres.</li>
+                        <li><strong>Entender Comportamento Indefinido (UB):</strong> Saber o que a especificação da linguagem não garante é vital para escrever código seguro e portável.</li>
+                        <li><strong>Aprender Assembly:</strong> Ver o que o compilador gera a partir do seu código C oferece insights profundos sobre performance.</li>
+                        <li><strong>Dominar depuração e profiling:</strong> Usar ferramentas para encontrar bugs de memória complexos e gargalos de desempenho.</li>
+                        <li><strong>Contribuir para projetos open-source:</strong> Aplicar e aprimorar suas habilidades em projetos do mundo real.</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section id="part7">
+                <h2>Parte VII: Tópicos Avançados para Desenvolvedores Seniors</h2>
+                <section id="sec13">
+                    <h3>Concorrência e Multithreading</h3>
+                    <h4>Programação Paralela em C</h4>
+                    <p>A partir do C11, a linguagem suporta threads nativamente com <code>&lt;threads.h&gt;</code>. Isso permite criar programas que executam múltiplas tarefas simultaneamente, aproveitando processadores multicore. Funções como <code>thrd_create</code>, <code>thrd_join</code> e <code>mtx_lock</code> (para mutexes) são essenciais para sincronização e evitar condições de corrida.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">#include &lt;threads.h&gt;
+
+int thread_func(void *arg) {
+    printf("Thread executando\\n");
+    return 0;
+}
+
+int main(void) {
+    thrd_t t;
+    thrd_create(&t, thread_func, NULL);
+    thrd_join(t, NULL);
+    return 0;
+}
+                    </code></pre>
+                </section>
+                <section id="sec14">
+                    <h3>Otimização e Performance</h3>
+                    <h4>Técnicas Avançadas</h4>
+                    <p>Para código de alto desempenho, considere cache locality, evitar alocações desnecessárias, usar intrinsics SIMD e profiling com ferramentas como Valgrind ou perf. Otimizar algoritmos é mais importante que micro-otimizações.</p>
+                </section>
+                <section id="sec15">
+                    <h3>Padrões de Design em C</h3>
+                    <h4>Aplicando Padrões sem OOP</h4>
+                    <p>Em C, padrões como Singleton, Factory e Observer podem ser implementados usando structs, ponteiros de função e macros. Por exemplo, um callback system simula o padrão Observer.</p>
+                </section>
+                <section id="sec16">
+                    <h3>Integração com Outras Linguagens</h3>
+                    <h4>Interoperabilidade</h4>
+                    <p>C é frequentemente usado como "cola" entre linguagens. Interfaces como CFFI (Python), JNI (Java) ou FFI (Rust) permitem chamar código C de outras linguagens, aproveitando sua eficiência.</p>
+                </section>
+            </section>
+
+            <section id="projects">
+                <h2>Projetos Práticos para Iniciantes</h2>
+                <p>Para consolidar os fundamentos, implemente estes projetos básicos que aplicam os conceitos aprendidos:</p>
+                <ol>
+                    <li><strong>Calculadora Simples:</strong> Crie um programa que leia dois números e uma operação (+, -, *, /) e exiba o resultado.</li>
+                    <li><strong>Gerador de Senhas:</strong> Implemente um programa que gera senhas aleatórias de comprimento variável usando rand().</li>
+                    <li><strong>Manipulador de Arquivos:</strong> Escreva um programa que copia o conteúdo de um arquivo para outro, linha por linha.</li>
+                    <li><strong>Estrutura de Dados Básica:</strong> Implemente uma pilha (stack) usando arrays e ponteiros.</li>
+                    <li><strong>Jogo da Forca:</strong> Crie um jogo simples onde o usuário adivinha letras de uma palavra oculta.</li>
+                </ol>
+                <p><strong>Dica:</strong> Comece pequeno e expanda. Use o editor acima para testar trechos de código.</p>
+            </section>
+
+            <section id="editor">
+                <h2>Editor de Código Interativo</h2>
+                <p>Teste seus conhecimentos escrevendo código C aqui. (Nota: Este é um editor simples; para execução real, use um compilador local.)</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código C" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Código</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO (igual ao anterior) ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            // Se o editor existir e a página for a do leitor/editor, garantir resize e focus
+            try {
+                if (typeof editor !== 'undefined' && (pageId === 'book-reader' || pageId === 'editor')) {
+                    setTimeout(() => { editor.resize(); try { editor.focus(); } catch (e) {} }, 120);
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `
+                <div>
+                    <h2 class="font-semibold text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wider mb-2">${part.title}</h2>
+                    <ul class="space-y-1">
+                        ${part.sections.map(section => `
+                            <li><a href="#${section.id}" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200 border-l-2 border-transparent pl-3">${section.title}</a></li>
+                        `).join('')}
+                    </ul>
+                </div>`;
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        } else { console.warn('table-of-contents container not found'); }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        } else { console.warn('book-content-container not found'); }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <h3 class="text-lg font-semibold mb-2">${index + 1}. ${q.question}</h3>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    const quizResult = document.getElementById('quiz-result');
+                    if (quizResult) quizResult.innerHTML = `Você acertou ${score} de ${bookData.quiz.length} perguntas.`;
+                });
+            }
+        }
+        // Inicializar editor: Ace quando disponível, caso contrário fallback para textarea
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit("code-editor");
+                editor.setTheme("ace/theme/monokai");
+                editor.session.setMode("ace/mode/c_cpp");
+                editor.setOptions({
+                    readOnly: false,
+                    highlightActiveLine: true,
+                    highlightSelectedWord: true
+                });
+                editor.setValue(`#include <stdio.h>\n\nint main(void) {\n    printf("Olá, Mundo!\\n");\n    return 0;\n}`);
+                editor.resize();
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace load failed, falling back to textarea:', e);
+            }
+        }
+        // Fallback: criar textarea simples caso Ace não esteja disponível ou tenha falhado
+        if (!editor) {
+            const editorDiv = document.getElementById('code-editor');
+            // limpar conteúdo do div e inserir textarea
+            editorDiv.innerHTML = '';
+            const ta = document.createElement('textarea');
+            ta.id = 'fallback-textarea';
+            ta.style.width = '100%';
+            ta.style.minHeight = '200px';
+            ta.className = 'p-4 font-mono text-sm';
+            ta.value = '#include <stdio.h>\n\nint main(void) {\n    printf("Olá, Mundo!\\n");\n    return 0;\n}';
+            editorDiv.appendChild(ta);
+            // fornecer uma API compatível usada pelo restante do código
+            editor = {
+                getValue: () => ta.value,
+                setValue: (v) => { ta.value = v; },
+                focus: () => ta.focus(),
+                resize: () => {},
+            };
+            // permitir foco via clique
+            ta.addEventListener('click', () => ta.focus());
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        // Simulador local: extrai literais de string de chamadas a printf e renderiza a saída
+        document.getElementById('run-code').addEventListener('click', async () => {
+            const code = editor.getValue();
+            const modal = document.getElementById('result-modal');
+            const modalOutput = document.getElementById('modal-output');
+
+            function unescapeCStr(s) {
+                return s.replace(/\\n/g, '\n')
+                        .replace(/\\r/g, '\r')
+                        .replace(/\\t/g, '\t')
+                        .replace(/\\\\/g, '\\')
+                        .replace(/\\"/g, '"')
+                        .replace(/\\'/g, "'");
+            }
+
+            function simulatePrintfOutput(codeText) {
+                const outputs = [];
+
+                // 1) Construir mapa simples de variáveis (int/float/char/const char* / char*) com literais
+                const varMap = {};
+                const assignRegex = /(int|long|short|float|double|char|const\s+char\s*\*|char\s*\*)\s+([A-Za-z_]\w*)\s*=\s*([^;]+);/g;
+                let am;
+                while ((am = assignRegex.exec(codeText)) !== null) {
+                    const name = am[2];
+                    let val = am[3].trim();
+                    // string literal
+                    let sm = val.match(/^"((?:\\.|[^"\\])*)"$/s);
+                    if (sm) { varMap[name] = unescapeCStr(sm[1]); continue; }
+                    // char literal
+                    let cm = val.match(/^'((?:\\.|[^'\\])*)'$/s);
+                    if (cm) { varMap[name] = unescapeCStr(cm[1]); continue; }
+                    // numeric literal
+                    let nm = val.match(/^([-+]?[0-9]+(?:\.[0-9]+)?)/);
+                    if (nm) { varMap[name] = nm[1]; continue; }
+                }
+
+                // Parser simples de argumentos: separa por vírgulas, respeitando strings e parênteses
+                function splitArgs(s) {
+                    const args = [];
+                    let cur = '';
+                    let inStr = false;
+                    let strChar = '';
+                    let esc = false;
+                    let depth = 0;
+                    for (let i = 0; i < s.length; i++) {
+                        const ch = s[i];
+                        if (esc) { cur += ch; esc = false; continue; }
+                        if (ch === '\\') { cur += ch; esc = true; continue; }
+                        if (inStr) {
+                            cur += ch;
+                            if (ch === strChar) { inStr = false; strChar = ''; }
+                            continue;
+                        }
+                        if (ch === '"' || ch === "'") { inStr = true; strChar = ch; cur += ch; continue; }
+                        if (ch === '(') { depth++; cur += ch; continue; }
+                        if (ch === ')') { if (depth>0) depth--; cur += ch; continue; }
+                        if (ch === ',' && depth === 0) { args.push(cur.trim()); cur = ''; continue; }
+                        cur += ch;
+                    }
+                    if (cur.trim() !== '') args.push(cur.trim());
+                    return args;
+                }
+
+                // encontra ocorrências de printf(...);
+                const printfRegex = /printf\s*\(([^;]*?)\)\s*;/gs;
+                let m;
+                while ((m = printfRegex.exec(codeText)) !== null) {
+                    const inside = m[1];
+                    const args = splitArgs(inside);
+                    if (args.length === 0) continue;
+                    const first = args[0];
+                    // se primeiro argumento é string literal -> format
+                    const fmtMatch = first.match(/^"((?:\\.|[^"\\])*)"$/s);
+                    if (fmtMatch) {
+                        const fmt = unescapeCStr(fmtMatch[1]);
+                        const remaining = args.slice(1);
+                        // avaliar cada remaining usando varMap ou literais
+                        function evalArg(a) {
+                            if (!a) return '[?]';
+                            a = a.trim();
+                            // string literal
+                            const sm = a.match(/^"((?:\\.|[^"\\])*)"$/s);
+                            if (sm) return unescapeCStr(sm[1]);
+                            // char literal
+                            const cm = a.match(/^'((?:\\.|[^'\\])*)'$/s);
+                            if (cm) return unescapeCStr(cm[1]);
+                            // numeric literal
+                            const nm = a.match(/^([-+]?[0-9]+(?:\.[0-9]+)?)/);
+                            if (nm) return nm[1];
+                            // identifier variable
+                            const id = a.match(/^([A-Za-z_]\w*)$/);
+                            if (id && varMap.hasOwnProperty(id[1])) return varMap[id[1]];
+                            return '[?]';
+                        }
+                        // substituir especificadores na ordem
+                        let argIndex = 0;
+                        const out = fmt.replace(/%[0-9\.]*[dfsciuoxX]/g, (spec) => {
+                            const val = evalArg(remaining[argIndex++] || '');
+                            return (val === undefined) ? '[?]' : String(val);
+                        });
+                        outputs.push(out);
+                    } else {
+                        // sem format string: tentar extrair literais como antes
+                        const strLitRegex = /"((?:\\.|[^"\\])*)"/gs;
+                        let parts = [];
+                        let sm2;
+                        while ((sm2 = strLitRegex.exec(inside)) !== null) {
+                            parts.push(unescapeCStr(sm2[1]));
+                        }
+                        if (parts.length > 0) outputs.push(parts.join(''));
+                        else outputs.push('[saida dinamica: argumentos não avaliados]');
+                    }
+                }
+                return outputs.join('\n');
+            }
+
+            try {
+                // Primeiro: tentativa (opcional) de execução remota via API pública (fall back silencioso se falhar)
+                // OBS: sem chave — pode falhar por CORS/limites; não depende disso para funcionar.
+                let executed = false;
+                try {
+                    const resp = await fetch('https://emkc.org/api/v2/piston/execute', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            language: 'c',
+                            version: 'gcc',
+                            files: [{ name: 'main.c', content: code }],
+                            compile_timeout: 10000,
+                            run_timeout: 3000
+                        })
+                    });
+                    if (resp.ok) {
+                        const json = await resp.json();
+                        if (json && (json.run || json.output || json.stdout)) {
+                            // algumas APIs retornam run.stdout
+                            const out = json.run ? (json.run.stdout || json.run.output || '') : (json.output || json.stdout || '');
+                            modalOutput.textContent = out || '[sem saída]';
+                            executed = true;
+                        }
+                    }
+                } catch (e) {
+                    // falha na execução remota, ignorar e usar simulador local
+                    executed = false;
+                }
+
+                if (!executed) {
+                    const simulated = simulatePrintfOutput(code);
+                    modalOutput.textContent = simulated || '[nenhuma chamada a printf detectada]';
+                }
+
+            } catch (err) {
+                modalOutput.textContent = 'Erro ao simular/executar: ' + err.message;
+            }
+
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) { targetElement.scrollIntoView({ behavior: 'smooth' }); }
+                if (window.innerWidth < 1024) { toggleSidebar(); }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    readerNavLinks.forEach((link) => { link.classList.remove('active'); });
+                    const id = entry.target.getAttribute('id');
+                    const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
+                    if (activeLink) { activeLink.classList.add('active'); }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Sistema de Progresso com localStorage
+        function updateProgress() {
+            const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo'];
+            let visited = 0;
+            let quizzes = 0;
+            pages.forEach(page => {
+                if (localStorage.getItem(`visited_${page}`)) visited++;
+                if (localStorage.getItem(`quiz_${page}`)) quizzes++;
+            });
+            document.getElementById('pages-visited').textContent = `${visited}/7`;
+            document.getElementById('quizzes-completed').textContent = `${quizzes}/7`;
+            const totalProgress = ((visited + quizzes) / 14) * 100;
+            document.getElementById('progress-bar').style.width = `${totalProgress}%`;
+            document.getElementById('progress-text').textContent = totalProgress === 100 ? 'Parabéns! Você completou tudo!' : `Continue explorando para avançar!`;
+        }
+        updateProgress();
+        // Marcar página como visitada
+        localStorage.setItem('visited_index', 'true');
+        // Para quizzes, será chamado de outras páginas
+    });
+    </script>
+</body>
+</html>
+

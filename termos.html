@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso - DevBooks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1f2937',
+                        secondary: '#374151',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .dark {
+            background-color: #111827;
+            color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <nav class="bg-white dark:bg-gray-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-gray-900 dark:text-white">DevBooks</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold mb-8">Termos de Uso</h1>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-6">
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">1. Aceitação dos Termos</h2>
+                <p>Ao acessar e usar o site DevBooks, você concorda em cumprir e estar vinculado a estes Termos de Uso. Se você não concordar com estes termos, por favor, não use o site.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">2. Descrição do Serviço</h2>
+                <p>O DevBooks é uma plataforma educacional gratuita dedicada ao aprendizado da linguagem de programação C, desde conceitos básicos até níveis avançados. Oferecemos conteúdo educacional, quizzes, editores de código e simuladores.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">3. Uso do Site</h2>
+                <p>Você concorda em usar o site apenas para fins educacionais e legais. É proibido:</p>
+                <ul class="list-disc list-inside ml-4 mt-2">
+                    <li>Usar o site para atividades ilegais ou não autorizadas</li>
+                    <li>Tentar acessar áreas restritas do site</li>
+                    <li>Interferir no funcionamento normal do site</li>
+                    <li>Copiar ou distribuir conteúdo sem permissão</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">4. Propriedade Intelectual</h2>
+                <p>Todo o conteúdo do site DevBooks, incluindo textos, imagens, código e design, é propriedade de Carlos Antonio de Oliveira Piquet ou de seus licenciadores. Você pode usar o conteúdo apenas para fins educacionais pessoais.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">5. Limitação de Responsabilidade</h2>
+                <p>O DevBooks é fornecido "como está" sem garantias de qualquer tipo. Não nos responsabilizamos por danos diretos, indiretos ou consequenciais decorrentes do uso do site.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">6. Privacidade</h2>
+                <p>Sua privacidade é importante para nós. Consulte nossa <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a> para mais informações sobre como coletamos e usamos seus dados.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">7. Modificações</h2>
+                <p>Reservamo-nos o direito de modificar estes Termos de Uso a qualquer momento. As alterações entrarão em vigor imediatamente após a publicação no site.</p>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-semibold mb-4">8. Contato</h2>
+                <p>Se você tiver dúvidas sobre estes Termos de Uso, entre em contato conosco através do e-mail: carlos.piquet@email.com</p>
+            </section>
+        </div>
+
+        <div class="mt-8 text-center">
+            <a href="index.html" class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">Voltar ao Início</a>
+        </div>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Desenvolvido por Carlos Antonio de Oliveira Piquet</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+    </script>
+</body>
+</html>

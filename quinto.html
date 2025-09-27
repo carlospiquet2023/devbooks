@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Aplicações Reais e Produção</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Heroicons removed to avoid CORS issues when opening file:// locally. Use inline SVGs or host icons locally for production. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Aplicações Reais e Produção: C em Projetos de Software
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Como professor de Desenvolvimento de Software, convido você a explorar como levar o C para o mundo real: ferramentas de build, bibliotecas, depuração, boas práticas e projetos práticos que transformam código em software robusto e escalável.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Livros Essenciais</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-red-600 dark:text-red-400">21st Century C</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            De Ben Klemens, um guia para C moderno, cobrindo ferramentas, bibliotecas e técnicas para desenvolvimento de software em produção.
+                        </p>
+                        <a href="https://www.oreilly.com/library/view/21st-century-c/9781491904428/" target="_blank" rel="noopener noreferrer" class="inline-block bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">Ver Detalhes</a>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-indigo-600 dark:text-indigo-400">Effective C</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            De Robert Seacord, focado em boas práticas, segurança e técnicas avançadas para escrever código C robusto e eficiente em projetos reais.
+                        </p>
+                        <a href="https://www.informit.com/store/effective-c-9780321334879" target="_blank" rel="noopener noreferrer" class="inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">Ver Detalhes</a>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="#" data-page="book-reader" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">Começar a Leitura</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Aplicações Reais e Produção: C em Projetos de Software",
+        parts: [
+            { title: "Parte I: Ferramentas Essenciais", sections: [{ id: "sec1", title: "Sistemas de Build (Make, CMake)" }, { id: "sec2", title: "Depuração e Profiling (GDB, Valgrind)" }] },
+            { title: "Parte II: Bibliotecas e Integração", sections: [{ id: "sec3", title: "Bibliotecas Padrão e Externas" }, { id: "sec4", title: "Integração com Outros Sistemas" }] },
+            { title: "Parte III: Boas Práticas e Segurança", sections: [{ id: "sec5", title: "Design Modular e Testes" }, { id: "sec6", title: "Segurança e Robustez" }] },
+            { title: "Parte IV: Projetos Práticos", sections: [{ id: "sec7", title: "Aplicações CLI e Servidores" }, { id: "sec8", title: "Exemplos de Código em Produção" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual ferramenta é usada para automatizar a compilação de projetos C?",
+                options: ["GDB", "Make", "Valgrind", "CMake"],
+                answer: 1
+            },
+            {
+                question: "O que o Valgrind ajuda a detectar?",
+                options: ["Erros de sintaxe", "Vazamentos de memória", "Loops infinitos", "Dependências circulares"],
+                answer: 1
+            },
+            {
+                question: "Qual é uma boa prática para modularidade em C?",
+                options: ["Usar variáveis globais", "Separar código em headers e sources", "Evitar comentários", "Compilar tudo em um arquivo"],
+                answer: 1
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Aplicações Reais e Produção: C em Projetos de Software</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Ferramentas Essenciais</h2>
+                <section id="sec1">
+                    <h3>Sistemas de Build (Make, CMake)</h3>
+                    <p>Como professor, enfatizo que projetos reais exigem automação. Make usa Makefiles para compilar dependências; CMake gera Makefiles cross-platform.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-makefile"># Makefile simples
+CC=gcc
+CFLAGS=-Wall -O2
+
+all: programa
+
+programa: main.o utils.o
+    $(CC) $(CFLAGS) -o programa main.o utils.o
+
+clean:
+    rm -f *.o programa
+                    </code></pre>
+                </section>
+                <section id="sec2">
+                    <h3>Depuração e Profiling (GDB, Valgrind)</h3>
+                    <p>GDB permite inspecionar execução; Valgrind detecta leaks e erros de memória.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Usando GDB
+gdb ./programa
+break main
+run
+print variavel
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Crie um Makefile para compilar um projeto com múltiplos arquivos.</li>
+                    <li>Use GDB para depurar um programa com segmentation fault.</li>
+                    <li>Execute Valgrind em um programa com vazamento de memória.</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Bibliotecas e Integração</h2>
+                <section id="sec3">
+                    <h3>Bibliotecas Padrão e Externas</h3>
+                    <p>Bibliotecas como GLib para utilitários, libcurl para HTTP. Instale via package managers.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">#include &lt;curl/curl.h&gt;
+
+int main() {
+    CURL *curl = curl_easy_init();
+    // Configurar e fazer request
+    curl_easy_cleanup(curl);
+    return 0;
+}
+                    </code></pre>
+                </section>
+                <section id="sec4">
+                    <h3>Integração com Outros Sistemas</h3>
+                    <p>Integre C com Python via ctypes, ou crie bindings para outras linguagens.</p>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Instale e use libcurl para fazer um request HTTP.</li>
+                    <li>Crie uma biblioteca compartilhada (.so) em C.</li>
+                    <li>Integre uma função C com Python usando ctypes.</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Boas Práticas e Segurança</h2>
+                <section id="sec5">
+                    <h3>Design Modular e Testes</h3>
+                    <p>Separe em módulos, use headers. Teste com frameworks como CUnit.</p>
+                </section>
+                <section id="sec6">
+                    <h3>Segurança e Robustez</h3>
+                    <p>Evite buffer overflows, valide inputs, use sanitizers.</p>
+                </section>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Projetos Práticos</h2>
+                <section id="sec7">
+                    <h3>Aplicações CLI e Servidores</h3>
+                    <p>Exemplos: parser de argumentos, servidor TCP simples.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">#include &lt;sys/socket.h&gt;
+
+int main() {
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    // Bind, listen, accept...
+    return 0;
+}
+                    </code></pre>
+                </section>
+                <section id="sec8">
+                    <h3>Exemplos de Código em Produção</h3>
+                    <p>Estude código de projetos open-source como Redis ou Nginx.</p>
+                </section>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz Interativo</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor de Código Interativo</h2>
+                <p>Teste seus conhecimentos escrevendo código C para aplicações reais aqui. (Nota: Este é um editor simples; para execução real, use um compilador local.)</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código C" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Código</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO (igual ao index.html) ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            // Se o editor existir e a página for a do leitor/editor, garantir resize e focus
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        } else { console.warn('table-of-contents container not found'); }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        } else { console.warn('book-content-container not found'); }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                });
+            }
+        }
+        // Inicializar editor: Ace quando disponível, caso contrário fallback para textarea
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/c');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        // Fallback: criar textarea simples caso Ace não esteja disponível ou tenha falhado
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu código C aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        // Simulador local: extrai literais de string de chamadas a printf e renderiza a saída
+        document.getElementById('run-code').addEventListener('click', async () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                // Simulação simples: procurar por printf com strings literais
+                const printfRegex = /printf\s*\(\s*"([^"]*)"(?:\s*,\s*([^)]*))?\s*\)\s*;/g;
+                let match;
+                while ((match = printfRegex.exec(code)) !== null) {
+                    const format = match[1];
+                    const args = match[2] ? match[2].split(',').map(a => a.trim()) : [];
+                    let result = format;
+                    // Substituir %s, %d, etc. com args simulados (simples)
+                    args.forEach((arg, i) => {
+                        if (arg.startsWith('"') && arg.endsWith('"')) {
+                            result = result.replace(/%s/, arg.slice(1, -1));
+                        } else if (!isNaN(arg)) {
+                            result = result.replace(/%d/, arg);
+                        } else {
+                            result = result.replace(/%s|%d/, arg);
+                        }
+                    });
+                    output += result + '\\n';
+                }
+                if (!output) output = 'Nenhuma saída printf detectada. Verifique o código.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Sistema de Progresso
+        localStorage.setItem('visited_quinto', 'true');
+        const submitBtn = document.getElementById('submit-quiz');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                localStorage.setItem('quiz_quinto', 'true');
+            });
+        }
+    });
+    </script>
+</body>
+</html>

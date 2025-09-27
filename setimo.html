@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Mestre em C</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Mestre em C: Arquitetura, Inovação e Liderança
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Bem-vindo ao nível supremo. Aqui, você não apenas domina C, mas se torna um arquiteto de sistemas, contribuidor para o ecossistema global e líder na comunidade. Este é o ápice da jornada, onde inovação e maestria se encontram.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Recursos para Mestres</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-purple-600 dark:text-purple-400">Arquitetura Avançada</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Explore sistemas distribuídos, microkernels e padrões de design em escala.
+                        </p>
+                        <a href="#" data-page="book-reader" class="inline-block bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">Explorar</a>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-indigo-600 dark:text-indigo-400">Análise de Código Real</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Estude código de projetos icônicos como Linux e Redis.
+                        </p>
+                        <button id="load-github" class="inline-block bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition-colors">Carregar Exemplos</button>
+                    </div>
+                </div>
+                <div id="github-examples" class="mt-8 hidden">
+                    <h3 class="text-2xl font-bold mb-4">Exemplos do GitHub</h3>
+                    <div id="github-content"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Perguntas do Stack Overflow</h3>
+                    <button id="load-stackoverflow" class="inline-block bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">Carregar Perguntas Recentes sobre C</button>
+                    <div id="stackoverflow-content" class="mt-4 hidden"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Discussões no GitHub</h3>
+                    <button id="load-github-issues" class="inline-block bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">Carregar Issues Abertas sobre C</button>
+                    <div id="github-issues-content" class="mt-4 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Mestre em C: Arquitetura, Inovação e Liderança",
+        parts: [
+            { title: "Parte I: Arquitetura de Sistemas", sections: [{ id: "sec1", title: "Sistemas Distribuídos em C" }, { id: "sec2", title: "Microkernels e Design Modular" }] },
+            { title: "Parte II: Análise de Código Mestre", sections: [{ id: "sec3", title: "Estudando Linux Kernel" }, { id: "sec4", title: "Redis e Event Loops" }, { id: "sec5", title: "Bitcoin Core e Consenso" }] },
+            { title: "Parte III: Contribuição e Pesquisa", sections: [{ id: "sec6", title: "Escrevendo Papers e RFCs" }, { id: "sec7", title: "Conferências e Comunidades" }] },
+            { title: "Parte IV: Liderança e Carreira", sections: [{ id: "sec8", title: "Roles de Arquiteto" }, { id: "sec9", title: "Mentoria e Networking" }] }
+        ],
+        quiz: [
+            {
+                question: "O que é um microkernel?",
+                options: ["Kernel com todos os drivers", "Kernel mínimo em user space", "Kernel sem threads", "Kernel para embedded"],
+                answer: 1
+            },
+            {
+                question: "Qual projeto C famoso usa event loops?",
+                options: ["Linux", "Redis", "GCC", "SQLite"],
+                answer: 1
+            },
+            {
+                question: "O que é um RFC em programação?",
+                options: ["Request for Comments", "Runtime Function Call", "Recursive Function Chain", "Resource File Config"],
+                answer: 0
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Mestre em C: Arquitetura, Inovação e Liderança</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Arquitetura de Sistemas</h2>
+                <section id="sec1">
+                    <h3>Sistemas Distribuídos em C</h3>
+                    <p>Como mestre, projete sistemas que escalam. Use bibliotecas como ZeroMQ para messaging, implementando padrões como publish-subscribe ou request-reply.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">// Exemplo: Cliente ZeroMQ simples
+#include <zmq.h>
+void *context = zmq_ctx_new();
+void *requester = zmq_socket(context, ZMQ_REQ);
+zmq_connect(requester, "tcp://localhost:5555");
+                    </code></pre>
+                </section>
+                <section id="sec2">
+                    <h3>Microkernels e Design Modular</h3>
+                    <p>Estude o design do L4 microkernel: mínimo, seguro, extensível. Implemente drivers como módulos carregáveis dinamicamente.</p>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Implemente um sistema de messaging simples usando sockets.</li>
+                    <li>Projete um microkernel básico com isolamento de processos.</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Análise de Código Mestre</h2>
+                <section id="sec3">
+                    <h3>Estudando Linux Kernel</h3>
+                    <p>Analise sched.c: algoritmos de agendamento CFS. Aprenda sobre fairness, prioridades e balanceamento de carga.</p>
+                </section>
+                <section id="sec4">
+                    <h3>Redis e Event Loops</h3>
+                    <p>Estude ae.c: event loop assíncrono. Veja como Redis lida com milhares de conexões eficientemente.</p>
+                </section>
+                <section id="sec5">
+                    <h3>Bitcoin Core e Consenso</h3>
+                    <p>Explore main.cpp: validação de blocos, proof-of-work. Entenda criptografia e consenso distribuído.</p>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Clone Linux e analise uma função de sched.c.</li>
+                    <li>Implemente um event loop simples inspirado no Redis.</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Contribuição e Pesquisa</h2>
+                <section id="sec6">
+                    <h3>Escrevendo Papers e RFCs</h3>
+                    <p>Contribua para padrões C23 via RFCs. Escreva papers sobre otimizações ou segurança.</p>
+                </section>
+                <section id="sec7">
+                    <h3>Conferências e Comunidades</h3>
+                    <p>Participe de CppCon, Linux Plumbers. Contribua para LKML ou r/C_Programming.</p>
+                </section>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Liderança e Carreira</h2>
+                <section id="sec8">
+                    <h3>Roles de Arquiteto</h3>
+                    <p>Como arquiteto, defina padrões, revise código e guie equipes. Exemplo: Linus Torvalds como maintainer do Linux.</p>
+                </section>
+                <section id="sec9">
+                    <h3>Mentoria e Networking</h3>
+                    <p>Ensine, faça code reviews. Networking: GitHub, LinkedIn, conferências.</p>
+                </section>
+            </section>
+
+            <section id="master-projects">
+                <h2>Projetos Finais de Mestre</h2>
+                <p>Estes projetos exigem pesquisa, implementação avançada e contribuição real. Cada um pode levar semanas ou meses.</p>
+                <ol>
+                    <li><strong>Microkernel Completo:</strong> Implemente um kernel mínimo com agendamento de processos (inspirado em L4), drivers modulares e isolamento de memória. Use assembly para boot e C para lógica. Recursos: <a href="https://en.wikipedia.org/wiki/L4_microkernel_family" target="_blank">L4 Wiki</a>.</li>
+                    <li><strong>Sistema Distribuído:</strong> Construa um cache distribuído como Redis clone, com sharding, replication e event loops assíncronos. Use ZeroMQ ou sockets. Teste com benchmarks como YCSB.</li>
+                    <li><strong>Contribuição Real:</strong> Envie um patch para o Linux kernel (ex: correção em sched.c) ou Redis. Siga o processo: clone, modifique, teste, submeta via LKML ou GitHub PR.</li>
+                    <li><strong>Paper Técnico:</strong> Escreva um paper sobre uma otimização em C (ex: SIMD em algoritmos de sorting). Publique no arXiv ou submeta para conferências como CGO.</li>
+                    <li><strong>Compilador DSL:</strong> Implemente um compilador para uma linguagem de domínio específico (ex: para queries SQL-like) usando flex/bison. Inclua otimização de código e geração de C.</li>
+                </ol>
+                <p><strong>Dicas para Mestres:</strong> Documente tudo, teste rigorosamente (valgrind, sanitizers), contribua para open-source. Networking: Participe de meetups ou online communities.</p>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz de Mestre</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor para Mestres</h2>
+                <p>Implemente código avançado aqui.</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código C" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Código</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO ---
+    function updateProgress() {
+        const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo'];
+        let visitedCount = 0;
+        let quizCount = 0;
+        pages.forEach(page => {
+            if (localStorage.getItem(`visited_${page}`)) visitedCount++;
+            if (localStorage.getItem(`quiz_${page}`)) quizCount++;
+        });
+        const totalProgress = ((visitedCount + quizCount) / (pages.length * 2)) * 100;
+        localStorage.setItem('overall_progress', totalProgress.toFixed(2));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Marcar visita à página
+        localStorage.setItem('visited_setimo', 'true');
+
+        // Atualizar progresso
+        updateProgress();
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                    // Marcar quiz como completo
+                    localStorage.setItem('quiz_setimo', 'true');
+                    // Atualizar progresso
+                    updateProgress();
+                });
+            }
+        }
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/c');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu código C aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        document.getElementById('run-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                const printfRegex = /printf\s*\(\s*"([^"]*)"(?:\s*,\s*([^)]*))?\s*\)\s*;/g;
+                let match;
+                while ((match = printfRegex.exec(code)) !== null) {
+                    const format = match[1];
+                    const args = match[2] ? match[2].split(',').map(a => a.trim()) : [];
+                    let result = format;
+                    args.forEach((arg, i) => {
+                        if (arg.startsWith('"') && arg.endsWith('"')) {
+                            result = result.replace(/%s/, arg.slice(1, -1));
+                        } else if (!isNaN(arg)) {
+                            result = result.replace(/%d/, arg);
+                        } else {
+                            result = result.replace(/%s|%d/, arg);
+                        }
+                    });
+                    output += result + '\\n';
+                }
+                if (!output) output = 'Nenhuma saída printf detectada. Verifique o código.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Integração GitHub API
+        document.getElementById('load-github').addEventListener('click', async () => {
+            const examplesDiv = document.getElementById('github-examples');
+            const contentDiv = document.getElementById('github-content');
+            examplesDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando exemplos...</p>';
+            try {
+                const response = await fetch('https://api.github.com/repos/torvalds/linux/contents/kernel/sched?ref=master');
+                const data = await response.json();
+                let html = '<ul>';
+                data.slice(0, 5).forEach(file => {
+                    if (file.name.endsWith('.c')) {
+                        html += `<li><a href="${file.html_url}" target="_blank">${file.name}</a> - Arquivo de scheduling do Linux</li>`;
+                    }
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar exemplos. Verifique sua conexão.</p>';
+            }
+        });
+
+        // Integração Stack Overflow API
+        document.getElementById('load-stackoverflow').addEventListener('click', async () => {
+            const contentDiv = document.getElementById('stackoverflow-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando perguntas...</p>';
+            try {
+                const response = await fetch('https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&tagged=c&site=stackoverflow&pagesize=5');
+                const data = await response.json();
+                let html = '<ul>';
+                data.items.forEach(question => {
+                    html += `<li><a href="${question.link}" target="_blank">${question.title}</a> - ${question.score} votos</li>`;
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar perguntas. Verifique sua conexão.</p>';
+            }
+        });
+
+        // GitHub Issues
+        document.getElementById('load-github-issues').addEventListener('click', async function() {
+            const contentDiv = document.getElementById('github-issues-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando issues...</p>';
+
+            try {
+                const response = await fetch('https://api.github.com/search/issues?q=language:c+is:open&sort=updated&order=desc&per_page=10');
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    let html = '<div class="space-y-4">';
+                    data.items.forEach(issue => {
+                        html += `
+                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                                <h4 class="font-semibold text-lg mb-2"><a href="${issue.html_url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">${issue.title}</a></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Por ${issue.user.login} em ${new Date(issue.created_at).toLocaleDateString()}</p>
+                                <p class="text-sm">${issue.body ? issue.body.substring(0, 200) + '...' : 'Sem descrição'}</p>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">${issue.state}</span>
+                                    <span class="inline-block bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full ml-2">${issue.comments} comentários</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    contentDiv.innerHTML = html;
+                } else {
+                    contentDiv.innerHTML = '<p>Nenhuma issue encontrada.</p>';
+                }
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar issues. Verifique sua conexão.</p>';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

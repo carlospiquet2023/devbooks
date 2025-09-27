@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Especialização e Carreira</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Heroicons removed to avoid CORS issues when opening file:// locally. Use inline SVGs or host icons locally for production. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Especialização e Carreira: C em Domínios Avançados e Profissionais
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Como professor de Computação Avançada, convido você a explorar os domínios especializados onde C brilha: sistemas embarcados, real-time, carreira profissional e integração com tecnologias emergentes. Este é o fechamento da jornada, preparando você para se tornar um especialista em C.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Livros Essenciais</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-teal-600 dark:text-teal-400">Expert C Programming</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            De Peter van der Linden, um mergulho profundo em técnicas avançadas, armadilhas e insights para programadores experientes em C.
+                        </p>
+                        <a href="https://www.amazon.com/Expert-C-Programming-Deep-Secrets/dp/0131774298" target="_blank" rel="noopener noreferrer" class="inline-block bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition-colors">Ver Detalhes</a>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400">The Practice of Programming</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            De Brian W. Kernighan & Rob Pike, focado em boas práticas de programação, design de software e carreira, aplicáveis a C e além.
+                        </p>
+                        <a href="https://www.amazon.com/Practice-Programming-Addison-Wesley-Professional-Computing/dp/020161586X" target="_blank" rel="noopener noreferrer" class="inline-block bg-cyan-500 text-white px-4 py-2 rounded-lg hover:bg-cyan-600 transition-colors">Ver Detalhes</a>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="#" data-page="book-reader" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">Começar a Leitura</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Especialização e Carreira: C em Domínios Avançados e Profissionais",
+        parts: [
+            { title: "Parte I: Domínios Especializados", sections: [{ id: "sec1", title: "Sistemas Embarcados e Real-Time" }, { id: "sec2", title: "C em IoT e Edge Computing" }] },
+            { title: "Parte II: Técnicas Avançadas", sections: [{ id: "sec3", title: "Metaprogramação e Macros Avançadas" }, { id: "sec4", title: "Otimização e Performance Extrema" }] },
+            { title: "Parte III: Carreira e Profissionalismo", sections: [{ id: "sec5", title: "Entrevistas e Certificações" }, { id: "sec6", title: "Contribuição Open-Source" }] },
+            { title: "Parte IV: Futuro e Integração", sections: [{ id: "sec7", title: "C com Tecnologias Emergentes" }, { id: "sec8", title: "Roadmap para Especialista" }] },
+            { title: "Parte V: Nível Mestre", sections: [{ id: "sec9", title: "Arquitetura de Software Avançada" }, { id: "sec10", title: "Análise de Código Real" }, { id: "sec11", title: "Contribuição e Pesquisa" }, { id: "sec12", title: "Caminhos de Carreira para Mestres" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual domínio de C é crítico para dispositivos com recursos limitados?",
+                options: ["Web development", "Sistemas embarcados", "Machine learning", "Cloud computing"],
+                answer: 1
+            },
+            {
+                question: "O que são macros avançadas em C usadas para?",
+                options: ["Debugging", "Metaprogramação em tempo de compilação", "Interface gráfica", "Banco de dados"],
+                answer: 1
+            },
+            {
+                question: "Qual é uma boa prática para carreira em C?",
+                options: ["Contribuir para projetos open-source", "Usar apenas linguagens de alto nível", "Evitar documentação", "Ignorar testes"],
+                answer: 0
+            },
+            {
+                question: "Em C++, qual recurso permite polimorfismo em tempo de compilação?",
+                options: ["Herança", "Templates", "Exceções", "Sobrecarga de operadores"],
+                answer: 1
+            },
+            {
+                question: "Qual algoritmo de ordenação é mais eficiente para listas quase ordenadas?",
+                options: ["Bubble Sort", "Insertion Sort", "Quick Sort", "Merge Sort"],
+                answer: 1
+            },
+            {
+                question: "No contexto de SO, o que é um 'deadlock'?",
+                options: ["Loop infinito", "Condição onde processos esperam indefinidamente por recursos", "Erro de segmentação", "Falha de alocação de memória"],
+                answer: 1
+            },
+            {
+                question: "Qual padrão de design pode ser implementado em C usando ponteiros de função?",
+                options: ["Singleton", "Observer", "Factory", "Decorator"],
+                answer: 1
+            },
+            {
+                question: "O que é um microkernel?",
+                options: ["Um kernel pequeno que roda em user space", "Um kernel que inclui todos os drivers", "Um kernel para microcontroladores", "Um kernel sem threads"],
+                answer: 0
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Especialização e Carreira: C em Domínios Avançados e Profissionais</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Domínios Especializados</h2>
+                <section id="sec1">
+                    <h3>Sistemas Embarcados e Real-Time</h3>
+                    <p>Como professor, enfatizo que C é rei em sistemas embarcados: microcontroladores (Arduino, ESP32), onde controle direto de hardware e eficiência são essenciais. Sistemas real-time exigem previsibilidade, usando timers e interrupções.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">// Exemplo simples de interrupção (pseudocódigo)
+void ISR_timer() {
+    // Código executado em interrupção
+    toggle_led();
+}
+                    </code></pre>
+                </section>
+                <section id="sec2">
+                    <h3>C em IoT e Edge Computing</h3>
+                    <p>C é usado em dispositivos IoT para sensores e comunicação eficiente. Edge computing processa dados localmente, reduzindo latência.</p>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Implemente um programa para ler sensores em um microcontrolador simulado.</li>
+                    <li>Projete um sistema real-time simples com timers.</li>
+                    <li>Pesquise bibliotecas C para IoT (ex: MQTT).</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Técnicas Avançadas</h2>
+                <section id="sec3">
+                    <h3>Metaprogramação e Macros Avançadas</h3>
+                    <p>Macros como #define podem criar DSLs simples. Técnicas avançadas incluem token pasting e conditional compilation.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">#define CONCAT(a, b) a ## b
+#define DEBUG 1
+#if DEBUG
+    #define LOG(msg) printf("DEBUG: %s\\n", msg)
+#else
+    #define LOG(msg)
+#endif
+                    </code></pre>
+                </section>
+                <section id="sec4">
+                    <h3>Otimização e Performance Extrema</h3>
+                    <p>Para alta performance: inline assembly, cache optimization, SIMD. Ferramentas como perf para profiling.</p>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Crie macros para logging condicional.</li>
+                    <li>Otimize um loop usando técnicas de cache.</li>
+                    <li>Use perf para analisar performance de um programa.</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Carreira e Profissionalismo</h2>
+                <section id="sec5">
+                    <h3>Entrevistas e Certificações</h3>
+                    <p>Entrevistas focam em algoritmos, ponteiros, SO. Certificações como C Programming Professional (CLP) ou MISRA C para segurança.</p>
+                </section>
+                <section id="sec6">
+                    <h3>Contribuição Open-Source</h3>
+                    <p>Contribua para Linux, GCC, ou projetos como Redis. Melhora habilidades e networking.</p>
+                </section>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Futuro e Integração</h2>
+                <section id="sec7">
+                    <h3>C com Tecnologias Emergentes</h3>
+                    <p>C integra com Rust (FFI), Go, ou é usado em blockchain (Bitcoin Core) e ML (bindings para TensorFlow).</p>
+                </section>
+                <section id="sec8">
+                    <h3>Roadmap para Especialista</h3>
+                    <p>Domine: algoritmos, SO, ferramentas, contribua open-source, especialize em domínio (embedded, segurança). Mantenha-se atualizado com C23.</p>
+                </section>
+            </section>
+
+            <section id="part5">
+                <h2>Parte V: Nível Mestre - Arquitetura e Inovação</h2>
+                <section id="sec9">
+                    <h3>Arquitetura de Software Avançada</h3>
+                    <p>Como mestre, pense em sistemas distribuídos, microkernels, ou arquiteturas orientadas a eventos. Estude designs como o do Linux kernel ou sistemas de arquivos como ZFS. Implemente padrões como microservices em C usando bibliotecas como ZeroMQ.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">// Exemplo: Padrão Observer em C
+typedef void (*observer_callback)(void *data);
+typedef struct {
+    observer_callback callback;
+    void *user_data;
+} Observer;
+                    </code></pre>
+                </section>
+                <section id="sec10">
+                    <h3>Análise de Código Real</h3>
+                    <p>Estude código de mestres: analise o kernel Linux (sched.c para agendamento), Redis (server.c para event loop), ou Bitcoin Core (main.cpp para consenso). Identifique otimizações, padrões de design e lições aprendidas.</p>
+                    <p><strong>Exercício:</strong> Clone um repositório C famoso e documente uma função complexa, explicando seu design.</p>
+                </section>
+                <section id="sec11">
+                    <h3>Contribuição e Pesquisa</h3>
+                    <p>Como mestre, contribua para RFCs, escreva papers sobre otimizações em C, ou participe de conferências como CppCon (mesmo para C). Publique bibliotecas em GitHub e mantenha-as ativas.</p>
+                </section>
+                <section id="sec12">
+                    <h3>Caminhos de Carreira para Mestres</h3>
+                    <p>Roles avançados: Arquiteto de Sistemas, Desenvolvedor de Kernels, Engenheiro de Segurança, Pesquisador em Linguagens. Networking: Participe de listas como LKML (Linux Kernel Mailing List), ou comunidades como r/C_Programming.</p>
+                    <p><strong>Recursos:</strong> Livros como "Beautiful Code" (capítulos em C), "The Art of UNIX Programming". Certificações: RHCE para Linux, ou doutorado em CS.</p>
+                </section>
+            </section>
+
+            <section id="master-projects">
+                <h2>Projetos de Nível Mestre</h2>
+                <p>Para alcançar o nível mestre, implemente estes projetos ambiciosos:</p>
+                <ol>
+                    <li><strong>Microkernel Simples:</strong> Construa um kernel mínimo com agendamento de processos e drivers básicos.</li>
+                    <li><strong>Compilador de Linguagem DSL:</strong> Implemente um compilador para uma linguagem de domínio específico usando lex/yacc ou flex/bison.</li>
+                    <li><strong>Sistema Distribuído:</strong> Crie um sistema de cache distribuído usando sockets e threads, inspirado no Redis.</li>
+                    <li><strong>Análise de Segurança:</strong> Audite um código C para vulnerabilidades (buffer overflows, race conditions) usando ferramentas como AddressSanitizer.</li>
+                    <li><strong>Contribuição para Linux:</strong> Envie um patch para o kernel Linux, mesmo que pequeno (ex: correção de bug).</li>
+                </ol>
+                <p><strong>Mentoria:</strong> Ensine outros, escreva tutoriais avançados ou participe de code reviews em projetos open-source.</p>
+            </section>
+
+            <section id="projects">
+                <h2>Projetos Práticos Avançados</h2>
+                <p>Para consolidar seu conhecimento, implemente estes projetos que combinam todos os tópicos aprendidos:</p>
+                <ol>
+                    <li><strong>Sistema Embarcado Simulado:</strong> Crie um programa em C que simule um microcontrolador com timers, interrupções e comunicação serial. Use threads para simular real-time.</li>
+                    <li><strong>Interpretador de Linguagem Simples:</strong> Implemente um parser e executor para uma linguagem de programação básica (ex: calculadora com variáveis), usando algoritmos de parsing e estruturas de dados.</li>
+                    <li><strong>Servidor HTTP Básico:</strong> Desenvolva um servidor web simples em C usando sockets (de SO), com suporte a múltiplas conexões e logging. Integre com ferramentas de produção como Makefiles.</li>
+                    <li><strong>Jogo de Estratégia com IA:</strong> Construa um jogo como Tic-Tac-Toe ou Damas, com algoritmos de busca (Minimax) e otimização de performance.</li>
+                    <li><strong>Contribuição Open-Source:</strong> Fork um projeto C no GitHub (ex: um utilitário), adicione uma feature e submeta um pull request.</li>
+                </ol>
+                <p><strong>Recursos Externos:</strong> Pratique em <a href="https://leetcode.com/problemset/all/" target="_blank">LeetCode</a>, <a href="https://www.hackerrank.com/domains/c" target="_blank">HackerRank</a>. Certificações: <a href="https://www.cprogramming.com/certification/" target="_blank">C Programming Professional</a>, <a href="https://www.misra.org.uk/" target="_blank">MISRA C</a>.</p>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz Interativo Avançado</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor de Código Interativo</h2>
+                <p>Teste seus conhecimentos escrevendo código C avançado aqui. (Nota: Este é um editor simples; para execução real, use um compilador local.)</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código C" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Código</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO (igual ao index.html) ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            // Se o editor existir e a página for a do leitor/editor, garantir resize e focus
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        } else { console.warn('table-of-contents container not found'); }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        } else { console.warn('book-content-container not found'); }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                });
+            }
+        }
+        // Inicializar editor: Ace quando disponível, caso contrário fallback para textarea
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/c');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        // Fallback: criar textarea simples caso Ace não esteja disponível ou tenha falhado
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu código C aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        // Simulador local: extrai literais de string de chamadas a printf e renderiza a saída
+        document.getElementById('run-code').addEventListener('click', async () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                // Simulação simples: procurar por printf com strings literais
+                const printfRegex = /printf\s*\(\s*"([^"]*)"(?:\s*,\s*([^)]*))?\s*\)\s*;/g;
+                let match;
+                while ((match = printfRegex.exec(code)) !== null) {
+                    const format = match[1];
+                    const args = match[2] ? match[2].split(',').map(a => a.trim()) : [];
+                    let result = format;
+                    // Substituir %s, %d, etc. com args simulados (simples)
+                    args.forEach((arg, i) => {
+                        if (arg.startsWith('"') && arg.endsWith('"')) {
+                            result = result.replace(/%s/, arg.slice(1, -1));
+                        } else if (!isNaN(arg)) {
+                            result = result.replace(/%d/, arg);
+                        } else {
+                            result = result.replace(/%s|%d/, arg);
+                        }
+                    });
+                    output += result + '\\n';
+                }
+                if (!output) output = 'Nenhuma saída printf detectada. Verifique o código.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Sistema de Progresso
+        localStorage.setItem('visited_sexto', 'true');
+        const submitBtn = document.getElementById('submit-quiz');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                localStorage.setItem('quiz_sexto', 'true');
+            });
+        }
+    });
+    </script>
+</body>
+</html>

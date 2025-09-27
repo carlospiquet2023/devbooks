@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Evolução para C++</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Heroicons removed to avoid CORS issues when opening file:// locally. Use inline SVGs or host icons locally for production. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Evolução para C++: Orientação a Objetos e Mais Recursos
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Como professor de Programação Avançada, convido você a explorar a transição natural de C para C++, incorporando conceitos de orientação a objetos, templates, STL e recursos modernos. Este compêndio foca no livro essencial de Bjarne Stroustrup, o criador da linguagem, para uma evolução sólida e fundamentada.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Livro Essencial</h2>
+                <div class="grid md:grid-cols-1 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-purple-600 dark:text-purple-400">Programming: Principles and Practice Using C++</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            De Bjarne Stroustrup, o criador do C++. Este livro serve como uma transição perfeita para programadores que dominam C, introduzindo orientação a objetos, recursos avançados e boas práticas de programação em C++.
+                        </p>
+                        <a href="https://www.stroustrup.com/programming.html" target="_blank" rel="noopener noreferrer" class="inline-block bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">Acessar Livro</a>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <a href="#" data-page="book-reader" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">Começar a Leitura</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Evolução para C++: Orientação a Objetos e Mais Recursos",
+        parts: [
+            { title: "Parte I: Transição de C para C++", sections: [{ id: "sec1", title: "Diferenças Fundamentais" }, { id: "sec2", title: "Compilação e Ferramentas" }] },
+            { title: "Parte II: Orientação a Objetos em C++", sections: [{ id: "sec3", title: "Classes e Objetos" }, { id: "sec4", title: "Herança e Polimorfismo" }, { id: "sec5", title: "Encapsulamento" }] },
+            { title: "Parte III: Recursos Avançados", sections: [{ id: "sec6", title: "Templates e STL" }, { id: "sec7", title: "Gerenciamento de Memória" }, { id: "sec8", title: "Exceções e Tratamento de Erros" }] },
+            { title: "Parte IV: Prática e Aplicações", sections: [{ id: "sec9", title: "Exercícios Práticos" }, { id: "sec10", title: "Projetos em C++" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual é a principal diferença entre C e C++ em termos de programação?",
+                options: ["Sintaxe diferente", "Suporte a orientação a objetos", "Velocidade de execução", "Tamanho do código"],
+                answer: 1
+            },
+            {
+                question: "O que é encapsulamento em C++?",
+                options: ["Ocultar dados e métodos dentro de uma classe", "Criar múltiplas instâncias de uma classe", "Herdar propriedades de outra classe", "Usar templates para generalizar código"],
+                answer: 0
+            },
+            {
+                question: "Qual biblioteca padrão em C++ fornece containers como vector e map?",
+                options: ["iostream", "algorithm", "STL (Standard Template Library)", "exception"],
+                answer: 2
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Evolução para C++: Orientação a Objetos e Mais Recursos</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Transição de C para C++</h2>
+                <section id="sec1">
+                    <h3>Diferenças Fundamentais</h3>
+                    <p>Como professor, enfatizo que C++ não é apenas uma extensão de C, mas uma linguagem que adiciona paradigmas poderosos. Enquanto C foca em procedimentos e controle direto de hardware, C++ introduz orientação a objetos, permitindo modelar problemas de forma mais abstrata e reutilizável.</p>
+                    <p>Principais diferenças:</p>
+                    <ul>
+                        <li><strong>Paradigma OO:</strong> Classes, objetos, herança, polimorfismo.</li>
+                        <li><strong>Gerenciamento de Memória:</strong> Construtores, destrutores, new/delete.</li>
+                        <li><strong>Templates:</strong> Programação genérica para reutilização de código.</li>
+                        <li><strong>STL:</strong> Biblioteca padrão com containers, algoritmos e iteradores.</li>
+                    </ul>
+                    <p>Exemplo simples de classe em C++:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">class Pessoa {
+private:
+    std::string nome;
+    int idade;
+public:
+    Pessoa(std::string n, int i) : nome(n), idade(i) {}
+    void apresentar() {
+        std::cout << "Olá, sou " << nome << " e tenho " << idade << " anos." << std::endl;
+    }
+};
+                    </code></pre>
+                </section>
+                <section id="sec2">
+                    <h3>Compilação e Ferramentas</h3>
+                    <p>C++ usa compiladores como g++ (GCC) ou clang++. Arquivos têm extensão .cpp. Inclua headers com #include, e use namespaces para evitar conflitos.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main() {
+    string msg = "Olá, C++!";
+    cout << msg << endl;
+    return 0;
+}
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Compare a sintaxe de um programa "Olá, Mundo!" em C e C++.</li>
+                    <li>Compile e execute um programa simples em C++ usando g++.</li>
+                    <li>Explique o papel do namespace std.</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Orientação a Objetos em C++</h2>
+                <section id="sec3">
+                    <h3>Classes e Objetos</h3>
+                    <p>Uma classe é um blueprint para objetos. Em C++, definimos membros (dados e funções) com especificadores de acesso: public, private, protected.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">class Carro {
+private:
+    string modelo;
+    int ano;
+public:
+    Carro(string m, int a) : modelo(m), ano(a) {}
+    void exibir() {
+        cout << "Modelo: " << modelo << ", Ano: " << ano << endl;
+    }
+};
+                    </code></pre>
+                </section>
+                <section id="sec4">
+                    <h3>Herança e Polimorfismo</h3>
+                    <p>Herança permite criar subclasses que herdam propriedades. Polimorfismo permite que objetos de diferentes classes respondam ao mesmo método de forma diferente (usando virtual).</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">class Veiculo {
+public:
+    virtual void mover() = 0; // Método puro
+};
+
+class Carro : public Veiculo {
+public:
+    void mover() override {
+        cout << "Carro se movendo" << endl;
+    }
+};
+                    </code></pre>
+                </section>
+                <section id="sec5">
+                    <h3>Encapsulamento</h3>
+                    <p>Encapsulamento oculta detalhes internos, expondo apenas interfaces necessárias. Use getters/setters para acesso controlado.</p>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Crie uma classe Pessoa com atributos nome e idade, e métodos para definir e obter esses valores.</li>
+                    <li>Implemente herança com uma classe Estudante que herda de Pessoa e adiciona atributo curso.</li>
+                    <li>Demonstre polimorfismo com um array de ponteiros para Veiculo.</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Recursos Avançados</h2>
+                <section id="sec6">
+                    <h3>Templates e STL</h3>
+                    <p>Templates permitem funções e classes genéricas. STL inclui vector, map, etc., para estruturas de dados eficientes.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+template &lt;typename T&gt;
+T maximo(T a, T b) {
+    return (a > b) ? a : b;
+}
+
+int main() {
+    vector&lt;int&gt; nums = {1, 2, 3, 4};
+    sort(nums.begin(), nums.end());
+    cout << maximo(5, 10) << endl;
+}
+                    </code></pre>
+                </section>
+                <section id="sec7">
+                    <h3>Gerenciamento de Memória</h3>
+                    <p>Use new/delete para alocação dinâmica. RAII (Resource Acquisition Is Initialization) com smart pointers (unique_ptr, shared_ptr) evita vazamentos.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">#include &lt;memory&gt;
+
+unique_ptr&lt;int&gt; ptr = make_unique&lt;int&gt;(42);
+cout << *ptr << endl; // Automaticamente deletado
+                    </code></pre>
+                </section>
+                <section id="sec8">
+                    <h3>Exceções e Tratamento de Erros</h3>
+                    <p>C++ usa try/catch/throw para tratamento de erros, mais robusto que códigos de erro em C.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cpp">try {
+    if (valor < 0) throw runtime_error("Valor negativo");
+} catch (const exception& e) {
+    cout << "Erro: " << e.what() << endl;
+}
+                    </code></pre>
+                </section>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Prática e Aplicações</h2>
+                <section id="sec9">
+                    <h3>Exercícios Práticos</h3>
+                    <p>Integre conceitos: crie um sistema de gerenciamento de biblioteca usando classes, herança e STL.</p>
+                </section>
+                <section id="sec10">
+                    <h3>Projetos em C++</h3>
+                    <p>Desenvolva aplicações reais: jogos, ferramentas de linha de comando, interfaces gráficas com Qt.</p>
+                </section>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz Interativo</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor de Código Interativo</h2>
+                <p>Teste seus conhecimentos escrevendo código C++ aqui. (Nota: Este é um editor simples; para execução real, use um compilador local.)</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código C++" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Código</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO (igual ao index.html) ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            // Se o editor existir e a página for a do leitor/editor, garantir resize e focus
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        } else { console.warn('table-of-contents container not found'); }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        } else { console.warn('book-content-container not found'); }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                });
+            }
+        }
+        // Inicializar editor: Ace quando disponível, caso contrário fallback para textarea
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/c_cpp');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        // Fallback: criar textarea simples caso Ace não esteja disponível ou tenha falhado
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu código C++ aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        // Simulador local: extrai literais de string de chamadas a cout e printf
+        document.getElementById('run-code').addEventListener('click', async () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                // Simulação simples: procurar por cout ou printf
+                const coutRegex = /cout\s*<<\s*["']([^"']*)["']/g;
+                const printfRegex = /printf\s*\(\s*"([^"]*)"(?:\s*,\s*([^)]*))?\s*\)\s*;/g;
+                let match;
+                while ((match = coutRegex.exec(code)) !== null) {
+                    output += match[1] + '\\n';
+                }
+                while ((match = printfRegex.exec(code)) !== null) {
+                    const format = match[1];
+                    const args = match[2] ? match[2].split(',').map(a => a.trim()) : [];
+                    let result = format;
+                    args.forEach((arg, i) => {
+                        if (arg.startsWith('"') && arg.endsWith('"')) {
+                            result = result.replace(/%s/, arg.slice(1, -1));
+                        } else if (!isNaN(arg)) {
+                            result = result.replace(/%d/, arg);
+                        } else {
+                            result = result.replace(/%s|%d/, arg);
+                        }
+                    });
+                    output += result + '\\n';
+                }
+                if (!output) output = 'Nenhuma saída cout ou printf detectada. Verifique o código.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Sistema de Progresso
+        localStorage.setItem('visited_terceiro', 'true');
+        const submitBtn = document.getElementById('submit-quiz');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                localStorage.setItem('quiz_terceiro', 'true');
+            });
+        }
+    });
+    </script>
+</body>
+</html>
