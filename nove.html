@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Mestre em COBOL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Mestre em COBOL: Linguagem Empresarial Atemporal
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Domine a linguagem que alimenta sistemas bancários, governamentais e empresariais há décadas. COBOL não morreu - evoluiu para a era moderna.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Recursos para Mestres COBOL</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">Estrutura e Sintaxe</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Aprenda a anatomia dos programas COBOL: divisões, seções, parágrafos e sentenças.
+                        </p>
+                        <a href="#" data-page="book-reader" class="inline-block bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">Explorar</a>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">Aplicações Empresariais</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Sistemas bancários, folha de pagamento, processamento de transações em lote.
+                        </p>
+                        <button id="load-github" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Carregar Exemplos</button>
+                    </div>
+                </div>
+                <div id="github-examples" class="mt-8 hidden">
+                    <h3 class="text-2xl font-bold mb-4">Exemplos do GitHub</h3>
+                    <div id="github-content"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Discussões sobre COBOL</h3>
+                    <button id="load-stackoverflow" class="inline-block bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">Carregar Perguntas sobre COBOL</button>
+                    <div id="stackoverflow-content" class="mt-4 hidden"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Projetos COBOL no GitHub</h3>
+                    <button id="load-github-issues" class="inline-block bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">Carregar Repositórios COBOL</button>
+                    <div id="github-issues-content" class="mt-4 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Mestre em COBOL: Linguagem Empresarial Atemporal",
+        parts: [
+            { title: "Parte I: Fundamentos do COBOL", sections: [{ id: "sec1", title: "História e Estrutura" }, { id: "sec2", title: "Divisões do Programa" }, { id: "sec3", title: "Variáveis e Tipos de Dados" }] },
+            { title: "Parte II: Estruturas de Controle", sections: [{ id: "sec4", title: "Comandos Condicionais" }, { id: "sec5", title: "Laços de Repetição" }, { id: "sec6", title: "Subprogramas e Funções" }] },
+            { title: "Parte III: Arquivos e Dados", sections: [{ id: "sec7", title: "Manipulação de Arquivos" }, { id: "sec8", title: "Banco de Dados COBOL" }, { id: "sec9", title: "Relatórios e Prints" }] },
+            { title: "Parte IV: COBOL Moderno", sections: [{ id: "sec10", title: "Orientação a Objetos" }, { id: "sec11", title: "Integração com Outros Sistemas" }, { id: "sec12", title: "Manutenção de Sistemas Legados" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual é a estrutura básica de um programa COBOL?",
+                options: ["IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE", "HEADER, BODY, FOOTER", "MAIN, FUNCTIONS, END", "BEGIN, MIDDLE, END"],
+                answer: 0
+            },
+            {
+                question: "O que significa COBOL?",
+                options: ["Common Business Oriented Language", "Computer Business Operations Language", "Common Business Operations Logic", "Computer Based Operational Language"],
+                answer: 0
+            },
+            {
+                question: "Qual divisão contém a lógica do programa?",
+                options: ["IDENTIFICATION DIVISION", "ENVIRONMENT DIVISION", "DATA DIVISION", "PROCEDURE DIVISION"],
+                answer: 3
+            },
+            {
+                question: "Como declarar uma variável numérica em COBOL?",
+                options: ["NUM PIC 9(5)", "INT NUMBER = 5", "05 NUMERO PIC 9(5) VALUE 0", "var numero = 0"],
+                answer: 2
+            },
+            {
+                question: "Qual comando é usado para loops em COBOL?",
+                options: ["FOR", "WHILE", "PERFORM", "LOOP"],
+                answer: 2
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Mestre em COBOL: Linguagem Empresarial Atemporal</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Fundamentos do COBOL</h2>
+                <section id="sec1">
+                    <h3>História e Estrutura</h3>
+                    <p>COBOL (Common Business-Oriented Language) foi criado em 1959 por um comitê liderado por Grace Hopper. Projetado para processamento comercial, tornou-se o padrão para aplicações empresariais. Hoje, ainda roda sistemas críticos mundiais.</p>
+                    <p>Características principais:</p>
+                    <ul>
+                        <li>Linguagem verbosa e auto-documentada</li>
+                        <li>Forte em processamento de arquivos e relatórios</li>
+                        <li>Estrutura hierárquica clara</li>
+                        <li>Portabilidade entre plataformas</li>
+                    </ul>
+                </section>
+                <section id="sec2">
+                    <h3>Divisões do Programa</h3>
+                    <p>Todo programa COBOL tem quatro divisões principais:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">IDENTIFICATION DIVISION.
+PROGRAM-ID. HELLO-WORLD.
+
+ENVIRONMENT DIVISION.
+CONFIGURATION SECTION.
+SOURCE-COMPUTER. IBM-PC.
+OBJECT-COMPUTER. IBM-PC.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 WS-MESSAGE PIC X(12) VALUE 'HELLO WORLD'.
+
+PROCEDURE DIVISION.
+MAIN-PARA.
+    DISPLAY WS-MESSAGE.
+    STOP RUN.</code></pre>
+
+                    <p><strong>IDENTIFICATION DIVISION:</strong> Identifica o programa</p>
+                    <p><strong>ENVIRONMENT DIVISION:</strong> Define o ambiente de execução</p>
+                    <p><strong>DATA DIVISION:</strong> Declara dados e estruturas</p>
+                    <p><strong>PROCEDURE DIVISION:</strong> Contém a lógica executável</p>
+                </section>
+                <section id="sec3">
+                    <h3>Variáveis e Tipos de Dados</h3>
+                    <p>COBOL usa PICTURE (PIC) para definir tipos de dados:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">DATA DIVISION.
+WORKING-STORAGE SECTION.
+* Numérico
+01 WS-SALARY PIC 9(5)V99 VALUE 2500.50.
+
+* Alfanumérico
+01 WS-NAME PIC X(30) VALUE 'JOÃO SILVA'.
+
+* Data
+01 WS-DATE PIC 9(8) VALUE 20231225.
+
+* Booleano (usando 88-level)
+01 WS-STATUS PIC 9.
+    88 WS-ACTIVE VALUE 1.
+    88 WS-INACTIVE VALUE 0.
+
+* Array
+01 WS-TABLE.
+    05 WS-ITEM OCCURS 10 TIMES PIC X(20).</code></pre>
+
+                    <p><strong>Códigos PIC:</strong></p>
+                    <ul>
+                        <li><code>9</code> - Dígito numérico</li>
+                        <li><code>X</code> - Caractere alfanumérico</li>
+                        <li><code>V</code> - Vírgula implícita</li>
+                        <li><code>S</code> - Sinal (+/-)</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Escreva um programa "Olá Mundo" em COBOL</li>
+                    <li>Declare variáveis para armazenar dados de um funcionário (nome, salário, data de admissão)</li>
+                    <li>Compile e execute seu primeiro programa COBOL</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Estruturas de Controle</h2>
+                <section id="sec4">
+                    <h3>Comandos Condicionais</h3>
+                    <p>COBOL usa IF/ELSE para controle condicional:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">PROCEDURE DIVISION.
+MAIN-PARA.
+    DISPLAY 'DIGITE SUA IDADE: '.
+    ACCEPT WS-AGE.
+
+    IF WS-AGE >= 18
+        DISPLAY 'MAIOR DE IDADE'
+    ELSE
+        DISPLAY 'MENOR DE IDADE'
+    END-IF.
+
+    EVALUATE WS-AGE
+        WHEN 0 THRU 12
+            DISPLAY 'CRIANÇA'
+        WHEN 13 THRU 17
+            DISPLAY 'ADOLESCENTE'
+        WHEN 18 THRU 64
+            DISPLAY 'ADULTO'
+        WHEN OTHER
+            DISPLAY 'IDOSO'
+    END-EVALUATE.
+
+    STOP RUN.</code></pre>
+                </section>
+                <section id="sec5">
+                    <h3>Laços de Repetição</h3>
+                    <p>O comando PERFORM é usado para loops:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">PROCEDURE DIVISION.
+MAIN-PARA.
+    PERFORM VARYING WS-COUNTER FROM 1 BY 1 UNTIL WS-COUNTER > 10
+        DISPLAY 'CONTADOR: ' WS-COUNTER
+    END-PERFORM.
+
+    PERFORM CALCULAR-FATORIAL
+        VARYING WS-N FROM 1 BY 1 UNTIL WS-N > 5.
+
+    STOP RUN.
+
+CALCULAR-FATORIAL.
+    COMPUTE WS-RESULT = 1
+    PERFORM VARYING WS-I FROM 1 BY 1 UNTIL WS-I > WS-N
+        COMPUTE WS-RESULT = WS-RESULT * WS-I
+    END-PERFORM
+    DISPLAY 'FATORIAL DE ' WS-N ' = ' WS-RESULT.</code></pre>
+                </section>
+                <section id="sec6">
+                    <h3>Subprogramas e Funções</h3>
+                    <p>COBOL suporta subprogramas através de parágrafos e seções:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">PROCEDURE DIVISION.
+MAIN-PARA.
+    MOVE 10 TO WS-NUM1
+    MOVE 20 TO WS-NUM2
+    PERFORM CALCULAR-SOMA
+    DISPLAY 'SOMA: ' WS-RESULT
+    STOP RUN.
+
+CALCULAR-SOMA.
+    COMPUTE WS-RESULT = WS-NUM1 + WS-NUM2.
+
+VALIDAR-ENTRADA SECTION.
+VALIDAR-INICIO.
+    IF WS-INPUT = SPACES
+        DISPLAY 'ENTRADA VAZIA'
+        GO TO VALIDAR-FIM
+    END-IF
+    DISPLAY 'ENTRADA VALIDA'.
+VALIDAR-FIM.
+    EXIT.</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Crie um programa que calcula a média de notas usando IF/ELSE</li>
+                    <li>Implemente um loop que imprime a tabuada de um número</li>
+                    <li>Escreva subprogramas para validar entrada de dados</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Arquivos e Dados</h2>
+                <section id="sec7">
+                    <h3>Manipulação de Arquivos</h3>
+                    <p>COBOL é especialista em processamento de arquivos:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+FILE-CONTROL.
+    SELECT EMPLOYEE-FILE ASSIGN TO 'EMP.DAT'
+        ORGANIZATION IS LINE SEQUENTIAL.
+
+DATA DIVISION.
+FILE SECTION.
+FD EMPLOYEE-FILE.
+01 EMPLOYEE-RECORD.
+    05 EMP-ID PIC 9(5).
+    05 EMP-NAME PIC X(30).
+    05 EMP-SALARY PIC 9(7)V99.
+
+WORKING-STORAGE SECTION.
+01 WS-EOF PIC X VALUE 'N'.
+
+PROCEDURE DIVISION.
+MAIN-PARA.
+    OPEN INPUT EMPLOYEE-FILE
+    PERFORM UNTIL WS-EOF = 'Y'
+        READ EMPLOYEE-FILE
+            AT END MOVE 'Y' TO WS-EOF
+            NOT AT END PERFORM PROCESS-RECORD
+        END-READ
+    END-PERFORM
+    CLOSE EMPLOYEE-FILE
+    STOP RUN.
+
+PROCESS-RECORD.
+    DISPLAY 'ID: ' EMP-ID ' NOME: ' EMP-NAME ' SALARIO: ' EMP-SALARY.</code></pre>
+                </section>
+                <section id="sec8">
+                    <h3>Banco de Dados COBOL</h3>
+                    <p>Integração com sistemas de banco de dados:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">PROCEDURE DIVISION.
+MAIN-PARA.
+    EXEC SQL
+        CONNECT TO 'DATABASE' USER 'USER' USING 'PASSWORD'
+    END-EXEC
+
+    EXEC SQL
+        SELECT EMP_ID, EMP_NAME, EMP_SALARY
+        INTO :EMP-ID, :EMP-NAME, :EMP-SALARY
+        FROM EMPLOYEES
+        WHERE EMP_ID = :SEARCH-ID
+    END-EXEC
+
+    IF SQLCODE = 0
+        DISPLAY 'FUNCIONARIO ENCONTRADO: ' EMP-NAME
+    ELSE
+        DISPLAY 'FUNCIONARIO NAO ENCONTRADO'
+    END-IF
+
+    EXEC SQL
+        DISCONNECT CURRENT
+    END-EXEC
+
+    STOP RUN.</code></pre>
+                </section>
+                <section id="sec9">
+                    <h3>Relatórios e Prints</h3>
+                    <p>COBOL excel em geração de relatórios formatados:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 REPORT-HEADER.
+    05 FILLER PIC X(50) VALUE 'RELATORIO DE FUNCIONARIOS'.
+01 DETAIL-LINE.
+    05 DET-ID PIC ZZZZ9.
+    05 FILLER PIC X(5) VALUE SPACES.
+    05 DET-NAME PIC X(30).
+    05 FILLER PIC X(5) VALUE SPACES.
+    05 DET-SALARY PIC $$$$,$$$.99.
+
+PROCEDURE DIVISION.
+PRINT-REPORT.
+    OPEN OUTPUT REPORT-FILE
+    WRITE REPORT-RECORD FROM REPORT-HEADER AFTER ADVANCING PAGE
+
+    PERFORM VARYING WS-COUNTER FROM 1 BY 1 UNTIL WS-COUNTER > 100
+        MOVE EMP-ID(WS-COUNTER) TO DET-ID
+        MOVE EMP-NAME(WS-COUNTER) TO DET-NAME
+        MOVE EMP-SALARY(WS-COUNTER) TO DET-SALARY
+        WRITE REPORT-RECORD FROM DETAIL-LINE AFTER ADVANCING 1 LINE
+    END-PERFORM
+
+    CLOSE REPORT-FILE.</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises3">
+                <h2>Exercícios Práticos - Parte III</h2>
+                <ol>
+                    <li>Crie um programa que lê dados de um arquivo e gera um relatório</li>
+                    <li>Implemente operações CRUD básicas em um arquivo sequencial</li>
+                    <li>Desenvolva um sistema de folha de pagamento com cálculos</li>
+                </ol>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: COBOL Moderno</h2>
+                <section id="sec10">
+                    <h3>Orientação a Objetos</h3>
+                    <p>COBOL OO (Object-Oriented COBOL) introduz classes e objetos:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">CLASS-ID. Employee AS "Employee".
+
+FACTORY.
+PROCEDURE DIVISION.
+METHOD-ID. NewEmployee.
+    LINKAGE SECTION.
+    01 LS-Name PIC X(30).
+    01 LS-ID PIC 9(5).
+    PROCEDURE DIVISION USING LS-Name, LS-ID.
+        SET SELF TO NEW Employee
+        INVOKE SELF "SetName" USING LS-Name
+        INVOKE SELF "SetID" USING LS-ID.
+END METHOD NewEmployee.
+
+OBJECT.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 EmployeeName PIC X(30).
+01 EmployeeID PIC 9(5).
+
+PROCEDURE DIVISION.
+METHOD-ID. SetName.
+    LINKAGE SECTION.
+    01 LS-Name PIC X(30).
+    PROCEDURE DIVISION USING LS-Name.
+        MOVE LS-Name TO EmployeeName.
+END METHOD SetName.
+
+METHOD-ID. GetName.
+    PROCEDURE DIVISION.
+        DISPLAY EmployeeName.
+END METHOD GetName.
+END OBJECT.
+END CLASS Employee.</code></pre>
+                </section>
+                <section id="sec11">
+                    <h3>Integração com Outros Sistemas</h3>
+                    <p>COBOL moderno integra com Java, C#, web services:</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-cobol">PROCEDURE DIVISION.
+MAIN-PARA.
+    * Chamar método Java
+    INVOKE "java.lang.System" "getProperty"
+        USING "user.name" RETURNING WS-USERNAME
+
+    * Consumir web service
+    INVOKE "HttpClient" "Get"
+        USING "https://api.example.com/data"
+        RETURNING WS-RESPONSE
+
+    * Integrar com C#
+    CALL "CsharpLibrary" USING WS-DATA
+        RETURNING WS-RESULT
+
+    DISPLAY 'USUARIO: ' WS-USERNAME
+    DISPLAY 'RESPOSTA: ' WS-RESPONSE
+    DISPLAY 'RESULTADO: ' WS-RESULT
+
+    STOP RUN.</code></pre>
+                </section>
+                <section id="sec12">
+                    <h3>Manutenção de Sistemas Legados</h3>
+                    <p>Técnicas para manter e modernizar código COBOL legado:</p>
+                    <ul>
+                        <li><strong>Refatoração:</strong> Quebrar programas grandes em módulos menores</li>
+                        <li><strong>Documentação:</strong> Adicionar comentários e diagramas de fluxo</li>
+                        <li><strong>Testes:</strong> Implementar testes unitários e de integração</li>
+                        <li><strong>Migração:</strong> Migrar gradualmente para plataformas modernas</li>
+                        <li><strong>Monitoramento:</strong> Adicionar logging e métricas de performance</li>
+                    </ul>
+
+                    <p><strong>Ferramentas modernas para COBOL:</strong></p>
+                    <ul>
+                        <li><strong>GnuCOBOL</strong> - Compilador open source gratuito
+                            <br><em>Download:</em> <a href="https://sourceforge.net/projects/gnucobol/" target="_blank">sourceforge.net/projects/gnucobol</a>
+                            <br><em>Instalação Linux:</em> <code>sudo apt install gnucobol</code> (Ubuntu/Debian) ou <code>sudo dnf install gnu-cobol</code> (Fedora)
+                            <br><em>Instalação Windows:</em> Baixe o instalador MSI e execute</li>
+                        <li><strong>IBM COBOL</strong> - Para mainframes z/OS
+                            <br><em>Download:</em> Parte do IBM z/OS (requer licença enterprise)
+                            <br><em>Uso:</em> Ambiente mainframe corporativo</li>
+                        <li><strong>Micro Focus Visual COBOL</strong> - IDE moderno com depuração visual
+                            <br><em>Download:</em> <a href="https://www.microfocus.com/products/visual-cobol/" target="_blank">microfocus.com/products/visual-cobol</a>
+                            <br><em>Instalação:</em> Trial disponível, licença comercial necessária para produção</li>
+                        <li><strong>OpenCOBOL</strong> - Fork do GnuCOBOL com melhor compatibilidade
+                            <br><em>Download:</em> <a href="https://www.opencobol.org/" target="_blank">opencobol.org</a>
+                            <br><em>Instalação:</em> Compile from source ou use pacotes da distro</li>
+                        <li><strong>COBOL-IT</strong> - Compilador enterprise com otimização
+                            <br><em>Download:</em> <a href="https://www.cobol-it.com/" target="_blank">cobol-it.com</a>
+                            <br><em>Instalação:</em> Licença comercial, suporta múltiplas plataformas</li>
+                        <li><strong>Raincode COBOL</strong> - Compilador .NET/Java
+                            <br><em>Download:</em> <a href="https://www.raincode.com/cobol/" target="_blank">raincode.com/cobol</a>
+                            <br><em>Instalação:</em> Compila COBOL para .NET assemblies ou JVM</li>
+                        <li><strong>Veryant isCOBOL</strong> - COBOL para aplicações web/mobile
+                            <br><em>Download:</em> <a href="https://www.veryant.com/iscobol.php" target="_blank">veryant.com/iscobol</a>
+                            <br><em>Instalação:</em> IDE completo com suporte a containers</li>
+                        <li><strong>Elastic COBOL</strong> - COBOL na nuvem
+                            <br><em>Download:</em> <a href="https://www.elasticcobol.com/" target="_blank">elasticcobol.com</a>
+                            <br><em>Instalação:</em> Plataforma SaaS, sem instalação local</li>
+                    </ul>
+
+                    <h4>Escolhendo um Compilador COBOL</h4>
+                    <ul>
+                        <li><strong>Para aprendizado:</strong> GnuCOBOL (gratuito, open source)</li>
+                        <li><strong>Para desenvolvimento moderno:</strong> Micro Focus Visual COBOL</li>
+                        <li><strong>Para mainframes:</strong> IBM COBOL</li>
+                        <li><strong>Para migração:</strong> Raincode COBOL (.NET/Java)</li>
+                        <li><strong>Para aplicações web:</strong> Veryant isCOBOL</li>
+                        <li><strong>Para nuvem:</strong> Elastic COBOL</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section id="exercises4">
+                <h2>Exercícios Práticos - Parte IV</h2>
+                <ol>
+                    <li>Implemente uma classe COBOL OO para gerenciar contas bancárias</li>
+                    <li>Integre um programa COBOL com uma API REST</li>
+                    <li>Refatore um programa legado aplicando boas práticas modernas</li>
+                </ol>
+            </section>
+
+            <section id="master-projects">
+                <h2>Projetos Finais de Mestre COBOL</h2>
+                <p>Estes projetos exigem conhecimento avançado e experiência prática. Cada um pode levar semanas ou meses.</p>
+                <ol>
+                    <li><strong>Sistema Bancário Completo:</strong> Desenvolva um sistema de contas correntes com depósitos, saques, transferências e relatórios. Inclua validações de segurança e integridade de dados.</li>
+                    <li><strong>ERP Empresarial:</strong> Construa um sistema de gestão empresarial com módulos de RH, financeiro e estoque. Use arquivos indexados e relatórios complexos.</li>
+                    <li><strong>Migração de Sistema Legado:</strong> Pegue um sistema COBOL antigo e modernize-o, adicionando interface web, banco de dados relacional e testes automatizados.</li>
+                    <li><strong>Processador de Transações:</strong> Implemente um sistema de processamento de transações financeiras em tempo real, com alta disponibilidade e recuperação de falhas.</li>
+                    <li><strong>Framework COBOL Moderno:</strong> Crie um framework que facilita o desenvolvimento de aplicações COBOL modernas, com suporte a OO, web services e microserviços.</li>
+                </ol>
+                <p><strong>Dicas para Mestres COBOL:</strong> Mantenha-se atualizado com os padrões modernos, participe da comunidade COBOL, documente tudo extensivamente. COBOL ainda é relevante em sistemas críticos empresariais.</p>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz de Mestre COBOL</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor para Programas COBOL</h2>
+                <p>Pratique programação COBOL aqui.</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código COBOL" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Programa</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO ---
+    function updateProgress() {
+        const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo', 'bonus', 'linux'];
+        let visitedCount = 0;
+        let quizCount = 0;
+        pages.forEach(page => {
+            if (localStorage.getItem(`visited_${page}`)) visitedCount++;
+            if (localStorage.getItem(`quiz_${page}`)) quizCount++;
+        });
+        const totalProgress = ((visitedCount + quizCount) / (pages.length * 2)) * 100;
+        localStorage.setItem('overall_progress', totalProgress.toFixed(2));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Marcar visita à página
+        localStorage.setItem('visited_nove', 'true');
+
+        // Atualizar progresso
+        updateProgress();
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                    // Marcar quiz como completo
+                    localStorage.setItem('quiz_nove', 'true');
+                    // Atualizar progresso
+                    updateProgress();
+                });
+            }
+        }
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/cobol');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu código COBOL aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        document.getElementById('run-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                // Simulação básica de COBOL
+                const lines = code.split('\\n');
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed.toUpperCase().includes('DISPLAY')) {
+                        const match = trimmed.match(/DISPLAY\s+['"]([^'"]*)['"]/i);
+                        if (match) {
+                            output += match[1] + '\\n';
+                        }
+                    }
+                }
+                if (!output) output = 'Nenhuma saída DISPLAY detectada. Verifique o código.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Integração GitHub API
+        document.getElementById('load-github').addEventListener('click', async () => {
+            const examplesDiv = document.getElementById('github-examples');
+            const contentDiv = document.getElementById('github-content');
+            examplesDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando exemplos...</p>';
+            try {
+                const response = await fetch('https://api.github.com/search/repositories?q=language:cobol&sort=stars&order=desc&per_page=5');
+                const data = await response.json();
+                let html = '<ul>';
+                data.items.forEach(repo => {
+                    html += `<li><a href="${repo.html_url}" target="_blank">${repo.name}</a> - ${repo.description || 'Sem descrição'}</li>`;
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar exemplos. Verifique sua conexão.</p>';
+            }
+        });
+
+        // Integração Stack Overflow API
+        document.getElementById('load-stackoverflow').addEventListener('click', async () => {
+            const contentDiv = document.getElementById('stackoverflow-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando perguntas...</p>';
+            try {
+                const response = await fetch('https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&tagged=cobol&site=stackoverflow&pagesize=5');
+                const data = await response.json();
+                let html = '<ul>';
+                data.items.forEach(question => {
+                    html += `<li><a href="${question.link}" target="_blank">${question.title}</a> - ${question.score} votos</li>`;
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar perguntas. Verifique sua conexão.</p>';
+            }
+        });
+
+        // GitHub Issues
+        document.getElementById('load-github-issues').addEventListener('click', async function() {
+            const contentDiv = document.getElementById('github-issues-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando repositórios...</p>';
+
+            try {
+                const response = await fetch('https://api.github.com/search/repositories?q=cobol&sort=updated&order=desc&per_page=10');
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    let html = '<div class="space-y-4">';
+                    data.items.forEach(repo => {
+                        html += `
+                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                                <h4 class="font-semibold text-lg mb-2"><a href="${repo.html_url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">${repo.name}</a></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">${repo.description || 'Sem descrição'}</p>
+                                <p class="text-sm">⭐ ${repo.stargazers_count} | 📅 ${new Date(repo.updated_at).toLocaleDateString()}</p>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">${repo.language}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    contentDiv.innerHTML = html;
+                } else {
+                    contentDiv.innerHTML = '<p>Nenhum repositório encontrado.</p>';
+                }
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar repositórios. Verifique sua conexão.</p>';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

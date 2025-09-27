@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Mestre em CMD vs PowerShell</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Mestre em CMD vs PowerShell: Automação no Windows
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Domine os dois principais shells do Windows. Do Command Prompt tradicional ao moderno PowerShell, torne-se um mestre na automação de tarefas e administração de sistemas.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Recursos para Mestres CMD/PowerShell</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">CMD Clássico</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            O shell tradicional do Windows. Simples, rápido e presente em todos os sistemas Windows.
+                        </p>
+                        <a href="#" data-page="book-reader" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">Explorar</a>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-purple-600 dark:text-purple-400">PowerShell Moderno</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Shell orientado a objetos com cmdlets poderosos. A ferramenta definitiva para automação no Windows.
+                        </p>
+                        <button id="load-github" class="inline-block bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">Carregar Exemplos</button>
+                    </div>
+                </div>
+                <div id="github-examples" class="mt-8 hidden">
+                    <h3 class="text-2xl font-bold mb-4">Exemplos do GitHub</h3>
+                    <div id="github-content"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Documentação Oficial</h3>
+                    <button id="load-docs" class="inline-block bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">Carregar Documentação</button>
+                    <div id="docs-content" class="mt-4 hidden"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Scripts PowerShell</h3>
+                    <button id="load-scripts" class="inline-block bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">Carregar Scripts</button>
+                    <div id="scripts-content" class="mt-4 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="book-content-data" hidden>
+        <!-- Book content HTML here -->
+    </div>
+
+    <script>
+    // @ts-nocheck
+    /* eslint-disable */
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Mestre em CMD vs PowerShell: Automação no Windows",
+        parts: [
+            { title: "Parte I: Fundamentos dos Shells", sections: [{ id: "sec1", title: "CMD vs PowerShell" }, { id: "sec2", title: "Instalação e Configuração" }, { id: "sec3", title: "Sintaxe Básica" }] },
+            { title: "Parte II: Comandos Essenciais", sections: [{ id: "sec4", title: "Navegação e Arquivos" }, { id: "sec5", title: "Rede e Conectividade" }, { id: "sec6", title: "Sistema e Hardware" }] },
+            { title: "Parte III: Scripts e Automação", sections: [{ id: "sec7", title: "Scripts Batch (.bat)" }, { id: "sec8", title: "Scripts PowerShell (.ps1)" }, { id: "sec9", title: "Agendamento de Tarefas" }] },
+            { title: "Parte IV: Recursos Avançados", sections: [{ id: "sec10", title: "PowerShell Remoting" }, { id: "sec11", title: "Módulos e Cmdlets" }, { id: "sec12", title: "Integração com .NET" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual é a principal diferença entre CMD e PowerShell?",
+                options: ["CMD é gráfico, PowerShell é texto", "PowerShell trabalha com objetos, CMD com texto", "CMD é mais rápido", "São idênticos"],
+                answer: 1
+            },
+            {
+                question: "Como executar um script PowerShell?",
+                options: ["powershell script.ps1", "Set-ExecutionPolicy RemoteSigned", "Ambos acima", "Nenhuma das acima"],
+                answer: 2
+            },
+            {
+                question: "Qual comando CMD lista arquivos?",
+                options: ["ls", "dir", "list", "show"],
+                answer: 1
+            },
+            {
+                question: "Como obter ajuda em PowerShell?",
+                options: ["help comando", "Get-Help comando", "man comando", "info comando"],
+                answer: 1
+            },
+            {
+                question: "Qual é o equivalente PowerShell do comando 'ipconfig'?",
+                options: ["Get-NetIPConfiguration", "Show-IP", "Net-Config", "IP-Info"],
+                answer: 0
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Mestre em CMD vs PowerShell: Automação no Windows</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Fundamentos dos Shells</h2>
+                <section id="sec1">
+                    <h3>CMD vs PowerShell: Qual Escolher?</h3>
+                    <p>O Windows oferece dois shells principais: CMD (Command Prompt) e PowerShell. Cada um tem seu propósito e vantagens.</p>
+
+                    <h4>Command Prompt (CMD)</h4>
+                    <ul>
+                        <li>Shell tradicional do Windows (desde DOS)</li>
+                        <li>Interface de texto simples e direta</li>
+                        <li>Comandos curtos e familiares</li>
+                        <li>Presente em todos os sistemas Windows</li>
+                        <li>Ideal para tarefas rápidas e scripts simples</li>
+                    </ul>
+
+                    <h4>PowerShell</h4>
+                    <ul>
+                        <li>Shell moderno orientado a objetos</li>
+                        <li>Baseado em .NET Framework</li>
+                        <li>Cmdlets consistentes (verbo-substantivo)</li>
+                        <li>Integração profunda com Windows</li>
+                        <li>Ideal para automação avançada e administração</li>
+                    </ul>
+
+                    <p><strong>Quando usar CMD:</strong> Tarefas simples, compatibilidade, scripts batch tradicionais</p>
+                    <p><strong>Quando usar PowerShell:</strong> Automação complexa, administração de sistemas, integração com APIs</p>
+                </section>
+
+                <section id="sec2">
+                    <h3>Instalação e Configuração</h3>
+                    <h4>CMD (Command Prompt)</h4>
+                    <p>O CMD vem pré-instalado em todos os sistemas Windows. Para acessá-lo:</p>
+                    <ul>
+                        <li>Tecla Windows + R → digite "cmd" → Enter</li>
+                        <li>Menu Iniciar → "Prompt de Comando"</li>
+                        <li>Shift + Botão direito na pasta → "Abrir janela do PowerShell aqui" (mas use CMD)</li>
+                    </ul>
+
+                    <h4>PowerShell</h4>
+                    <p>PowerShell Core (versão moderna) pode precisar ser instalado:</p>
+                    <p><strong>Download:</strong> <a href="https://github.com/PowerShell/PowerShell/releases" target="_blank">github.com/PowerShell/PowerShell/releases</a></p>
+                    <p><strong>Instalação:</strong></p>
+                    <ul>
+                        <li>Baixe o MSI para Windows</li>
+                        <li>Execute como administrador</li>
+                        <li>Verifique: <code>powershell $PSVersionTable</code></li>
+                    </ul>
+
+                    <h4>Configuração Inicial do PowerShell</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Verificar versão
+$PSVersionTable.PSVersion
+
+# Configurar política de execução (para scripts)
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Instalar módulos essenciais
+Install-Module -Name PowerShellGet -Force
+Install-Module -Name PSReadLine -Force
+
+# Configurar perfil
+if (!(Test-Path $PROFILE)) { New-Item -Type File -Path $PROFILE -Force }
+notepad $PROFILE</code></pre>
+                </section>
+
+                <section id="sec3">
+                    <h3>Sintaxe Básica</h3>
+                    <h4>CMD - Sintaxe Tradicional</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-batch">REM Comentário
+echo Olá Mundo
+set VARIAVEL=valor
+echo %VARIAVEL%
+if "%VARIAVEL%"=="valor" echo Igual
+for %%i in (1 2 3) do echo %%i</code></pre>
+
+                    <h4>PowerShell - Sintaxe Moderna</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Comentário
+Write-Host "Olá Mundo"
+$variavel = "valor"
+Write-Host $variavel
+if ($variavel -eq "valor") { Write-Host "Igual" }
+foreach ($i in 1..3) { Write-Host $i }</code></pre>
+
+                    <p><strong>Diferenças principais:</strong></p>
+                    <ul>
+                        <li>CMD: Variáveis com %%, sintaxe DOS-like</li>
+                        <li>PowerShell: Variáveis com $, sintaxe .NET-like</li>
+                        <li>CMD: Comandos externos</li>
+                        <li>PowerShell: Cmdlets integrados</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Abra CMD e PowerShell, compare as interfaces</li>
+                    <li>Instale PowerShell Core se necessário</li>
+                    <li>Configure a política de execução do PowerShell</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Comandos Essenciais</h2>
+                <section id="sec4">
+                    <h3>Navegação e Arquivos</h3>
+                    <table class="w-full border-collapse border border-gray-300 dark:border-gray-600 my-4">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-700">
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">Tarefa</th>
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">CMD</th>
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">PowerShell</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Listar arquivos</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>dir</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-ChildItem</code> ou <code>ls</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Mudar diretório</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>cd pasta</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Set-Location pasta</code> ou <code>cd pasta</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Criar diretório</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>mkdir pasta</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>New-Item pasta -ItemType Directory</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Copiar arquivo</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>copy origem destino</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Copy-Item origem destino</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Mover/renomear</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>move origem destino</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Move-Item origem destino</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Deletar arquivo</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>del arquivo</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Remove-Item arquivo</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Exemplos Práticos</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># PowerShell: Listar arquivos recursivamente com tamanho
+Get-ChildItem -Recurse | Where-Object { $_.Length -gt 1MB } | Sort-Object Length -Descending
+
+# CMD: Listar apenas arquivos .txt
+dir *.txt /b
+
+# PowerShell: Encontrar arquivos modificados hoje
+Get-ChildItem | Where-Object { $_.LastWriteTime.Date -eq (Get-Date).Date }</code></pre>
+                </section>
+
+                <section id="sec5">
+                    <h3>Rede e Conectividade</h3>
+                    <table class="w-full border-collapse border border-gray-300 dark:border-gray-600 my-4">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-700">
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">Tarefa</th>
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">CMD</th>
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">PowerShell</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Config IP</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>ipconfig</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-NetIPConfiguration</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Ping</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>ping host</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Test-Connection host</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Traceroute</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>tracert host</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Test-NetConnection host -TraceRoute</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Portas abertas</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>netstat -an</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-NetTCPConnection</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Exemplos Avançados</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># PowerShell: Verificar conectividade múltipla
+$hosts = "google.com", "github.com", "microsoft.com"
+Test-Connection $hosts -Count 1 | Format-Table
+
+# CMD: Verificar conectividade com timeout
+ping -t -w 1000 google.com
+
+# PowerShell: Monitor de rede
+Get-NetAdapter | Where-Object { $_.Status -eq "Up" } | Select-Object Name, InterfaceDescription, LinkSpeed</code></pre>
+                </section>
+
+                <section id="sec6">
+                    <h3>Sistema e Hardware</h3>
+                    <table class="w-full border-collapse border border-gray-300 dark:border-gray-600 my-4">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-700">
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">Tarefa</th>
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">CMD</th>
+                                <th class="border border-gray-300 dark:border-gray-600 p-2">PowerShell</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Info sistema</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>systeminfo</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-ComputerInfo</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Processos</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>tasklist</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-Process</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Serviços</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>net start</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-Service</code></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2">Uptime</td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>net stats srv</code></td>
+                                <td class="border border-gray-300 dark:border-gray-600 p-2"><code>Get-Uptime</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Monitoramento em Tempo Real</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># PowerShell: Monitor de processos
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
+
+# CMD: Monitor de tarefas
+tasklist /fi "memusage gt 100000"
+
+# PowerShell: Info detalhada do sistema
+Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsArchitecture, CsProcessors, CsTotalPhysicalMemory</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Compare os comandos de listagem de arquivos em CMD vs PowerShell</li>
+                    <li>Configure uma conexão de rede usando ambos os shells</li>
+                    <li>Monitore processos do sistema em tempo real</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Scripts e Automação</h2>
+                <section id="sec7">
+                    <h3>Scripts Batch (.bat)</h3>
+                    <p>Scripts batch são arquivos .bat ou .cmd executados pelo CMD. São ideais para automação simples.</p>
+
+                    <h4>Estrutura Básica</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-batch">@echo off
+REM Script de backup simples
+echo Iniciando backup...
+
+set BACKUP_DIR=C:\\Backup
+set SOURCE_DIR=C:\\Dados
+
+if not exist "%BACKUP_DIR%" mkdir "%BACKUP_DIR%"
+
+xcopy "%SOURCE_DIR%" "%BACKUP_DIR%" /E /I /H /Y
+
+echo Backup concluído em %date% %time%
+pause</code></pre>
+
+                    <h4>Recursos Avançados do Batch</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-batch">@echo off
+REM Script com funções e validações
+
+:MAIN
+call :VALIDATE_DIRS
+if errorlevel 1 goto :ERROR
+
+call :CREATE_BACKUP
+if errorlevel 1 goto :ERROR
+
+echo Backup realizado com sucesso!
+goto :END
+
+:VALIDATE_DIRS
+if not exist "C:\\Dados" (
+    echo Diretório de origem não encontrado!
+    exit /b 1
+)
+if not exist "C:\\Backup" mkdir "C:\\Backup"
+exit /b 0
+
+:CREATE_BACKUP
+echo Criando backup...
+xcopy "C:\\Dados" "C:\\Backup\\%date:~-4,4%%date:~-10,2%%date:~-7,2%" /E /I /H /Y
+exit /b 0
+
+:ERROR
+echo Erro durante o backup!
+exit /b 1
+
+:END
+echo Processo finalizado.</code></pre>
+                </section>
+
+                <section id="sec8">
+                    <h3>Scripts PowerShell (.ps1)</h3>
+                    <p>Scripts PowerShell são muito mais poderosos, com acesso completo ao .NET Framework e cmdlets avançados.</p>
+
+                    <h4>Script Básico</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Script de backup PowerShell
+param(
+    [string]$SourcePath = "C:\\Dados",
+    [string]$BackupPath = "C:\\Backup"
+)
+
+Write-Host "Iniciando backup..." -ForegroundColor Green
+
+# Criar diretório se não existir
+if (!(Test-Path $BackupPath)) {
+    New-Item -ItemType Directory -Path $BackupPath | Out-Null
+}
+
+# Data para nome do backup
+$timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+$backupDir = Join-Path $BackupPath "Backup_$timestamp"
+
+# Copiar arquivos
+try {
+    Copy-Item -Path $SourcePath -Destination $backupDir -Recurse -Force
+    Write-Host "Backup concluído com sucesso!" -ForegroundColor Green
+    Write-Host "Local: $backupDir"
+} catch {
+    Write-Error "Erro durante o backup: $($_.Exception.Message)"
+}</code></pre>
+
+                    <h4>Script Avançado com Funções</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell">function New-SystemBackup {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$SourcePath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$DestinationPath,
+
+        [switch]$Compress,
+        [switch]$Verify
+    )
+
+    begin {
+        Write-Verbose "Iniciando backup do sistema"
+        $startTime = Get-Date
+    }
+
+    process {
+        try {
+            # Validar caminhos
+            if (!(Test-Path $SourcePath)) {
+                throw "Caminho de origem não encontrado: $SourcePath"
+            }
+
+            # Criar nome único para backup
+            $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
+            $backupName = "SystemBackup_$timestamp"
+            $fullBackupPath = Join-Path $DestinationPath $backupName
+
+            # Criar backup
+            Write-Progress -Activity "Criando backup" -Status "Copiando arquivos..."
+            Copy-Item -Path $SourcePath -Destination $fullBackupPath -Recurse -Force
+
+            # Comprimir se solicitado
+            if ($Compress) {
+                Write-Progress -Activity "Comprimindo" -Status "Criando arquivo ZIP..."
+                $zipPath = "$fullBackupPath.zip"
+                Compress-Archive -Path $fullBackupPath -DestinationPath $zipPath
+                Remove-Item $fullBackupPath -Recurse -Force
+                $fullBackupPath = $zipPath
+            }
+
+            # Verificar integridade
+            if ($Verify) {
+                Write-Progress -Activity "Verificando" -Status "Verificando integridade..."
+                # Implementar verificação
+            }
+
+            $result = [PSCustomObject]@{
+                SourcePath = $SourcePath
+                BackupPath = $fullBackupPath
+                Timestamp = $startTime
+                Duration = (Get-Date) - $startTime
+                Success = $true
+            }
+
+            Write-Output $result
+
+        } catch {
+            Write-Error "Erro no backup: $($_.Exception.Message)"
+            $result = [PSCustomObject]@{
+                SourcePath = $SourcePath
+                BackupPath = $null
+                Timestamp = $startTime
+                Duration = (Get-Date) - $startTime
+                Success = $false
+                Error = $_.Exception.Message
+            }
+            Write-Output $result
+        }
+    }
+
+    end {
+        Write-Verbose "Backup concluído em $((Get-Date) - $startTime)"
+    }
+}
+
+# Uso do script
+# New-SystemBackup -SourcePath "C:\\Dados" -DestinationPath "C:\\Backup" -Compress -Verify</code></pre>
+                </section>
+
+                <section id="sec9">
+                    <h3>Agendamento de Tarefas</h3>
+                    <h4>Task Scheduler (CMD)</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-batch">REM Agendar script batch
+schtasks /create /tn "BackupDiario" /tr "C:\\Scripts\\backup.bat" /sc daily /st 02:00
+
+REM Agendar com credenciais específicas
+schtasks /create /tn "BackupAdmin" /tr "C:\\Scripts\\backup.bat" /sc weekly /d MON /st 03:00 /ru "DOMAIN\\Admin" /rp "password"</code></pre>
+
+                    <h4>PowerShell Scheduled Jobs</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Registrar job no Task Scheduler
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-File C:\\Scripts\\backup.ps1"
+$trigger = New-ScheduledTaskTrigger -Daily -At 2AM
+$principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType S4U
+$task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principal
+Register-ScheduledTask -TaskName "PowerShellBackup" -InputObject $task
+
+# Usar PSScheduledJob (deprecated, mas ainda funciona)
+Register-ScheduledJob -Name "BackupJob" -ScriptBlock {
+    & "C:\\Scripts\\backup.ps1"
+} -Trigger (New-JobTrigger -Daily -At "02:00")</code></pre>
+
+                    <h4>PowerShell Jobs em Background</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Executar job em background
+$job = Start-Job -ScriptBlock {
+    param($path)
+    Get-ChildItem $path -Recurse | Measure-Object -Property Length -Sum
+} -ArgumentList "C:\\Windows"
+
+# Verificar status
+Get-Job | Format-Table
+
+# Obter resultados
+$result = Receive-Job -Id $job.Id
+Write-Host "Total de bytes: $($result.Sum)"
+
+# Limpar jobs
+Remove-Job -Id $job.Id</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises3">
+                <h2>Exercícios Práticos - Parte III</h2>
+                <ol>
+                    <li>Crie um script batch para backup automático</li>
+                    <li>Desenvolva um script PowerShell com tratamento de erros</li>
+                    <li>Agende uma tarefa usando Task Scheduler</li>
+                </ol>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Recursos Avançados</h2>
+                <section id="sec10">
+                    <h3>PowerShell Remoting</h3>
+                    <p>PowerShell Remoting permite executar comandos em máquinas remotas via WS-Management.</p>
+
+                    <h4>Configuração Básica</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Habilitar remoting (como administrador)
+Enable-PSRemoting -Force
+
+# Verificar configuração
+Get-PSSessionConfiguration
+
+# Conectar a máquina remota
+Enter-PSSession -ComputerName "SERVIDOR01" -Credential (Get-Credential)
+
+# Executar comando remoto
+Invoke-Command -ComputerName "SERVIDOR01" -ScriptBlock { Get-Process | Where-Object CPU -gt 50 }
+
+# Sessão persistente
+$session = New-PSSession -ComputerName "SERVIDOR01"
+Invoke-Command -Session $session -ScriptBlock { Restart-Service wuauserv }
+Remove-PSSession $session</code></pre>
+
+                    <h4>Configuração Avançada</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Configurar HTTPS para remoting
+New-SelfSignedCertificate -DnsName "server01.contoso.com" -CertStoreLocation "Cert:\\LocalMachine\\My"
+$thumbprint = (Get-ChildItem Cert:\\LocalMachine\\My | Where-Object Subject -eq "CN=server01.contoso.com").Thumbprint
+
+# Configurar WinRM para HTTPS
+# Usar entidade HTML &#96; para representar backticks e evitar fechar a template literal
+winrm create winrm/config/Listener?Address=*+Transport=HTTPS "@{Hostname=&#96;\"server01.contoso.com\"&#96;;CertificateThumbprint=&#96;\"$thumbprint\"&#96;}"
+
+# Conectar via HTTPS
+Enter-PSSession -ComputerName "server01.contoso.com" -UseSSL -Credential (Get-Credential)</code></pre>
+                </section>
+
+                <section id="sec11">
+                    <h3>Módulos e Cmdlets</h3>
+                    <p>PowerShell é extensível através de módulos que adicionam novos cmdlets e funcionalidades.</p>
+
+                    <h4>Gerenciamento de Módulos</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Listar módulos instalados
+Get-Module -ListAvailable
+
+# Instalar módulo da galeria
+Install-Module -Name AzureRM -AllowClobber
+
+# Importar módulo
+Import-Module AzureRM
+
+# Ver cmdlets disponíveis
+Get-Command -Module AzureRM | Select-Object Name, CommandType
+
+# Criar módulo personalizado
+New-Module -Name MeuModulo -ScriptBlock {
+    function Get-SystemReport {
+        [CmdletBinding()]
+        param()
+        $os = Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion
+        $cpu = Get-WmiObject Win32_Processor | Select-Object Name, NumberOfCores
+        $memory = Get-WmiObject Win32_OperatingSystem | Select-Object TotalVisibleMemorySize, FreePhysicalMemory
+
+        [PSCustomObject]@{
+            OS = $os
+            CPU = $cpu
+            MemoryGB = [math]::Round($memory.TotalVisibleMemorySize / 1MB, 2)
+            FreeMemoryGB = [math]::Round($memory.FreePhysicalMemory / 1MB, 2)
+        }
+    }
+    Export-ModuleMember -Function Get-SystemReport
+}</code></pre>
+
+                    <h4>Criar Cmdlet Personalizado</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell">function Get-FileSize {
+    [CmdletBinding()]
+    [OutputType([PSCustomObject])]
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [string[]]$Path,
+
+        [Parameter()]
+        [string]$Unit = "MB"
+    )
+
+    begin {
+        $unitMultiplier = switch ($Unit.ToUpper()) {
+            "KB" { 1KB }
+            "MB" { 1MB }
+            "GB" { 1GB }
+            default { 1MB }
+        }
+    }
+
+    process {
+        foreach ($item in $Path) {
+            if (Test-Path $item) {
+                $fileInfo = Get-Item $item
+                [PSCustomObject]@{
+                    Name = $fileInfo.Name
+                    Size = [math]::Round($fileInfo.Length / $unitMultiplier, 2)
+                    Unit = $Unit
+                    FullName = $fileInfo.FullName
+                }
+            }
+        }
+    }
+}
+
+# Uso
+# Get-ChildItem *.exe | Get-FileSize -Unit GB</code></pre>
+                </section>
+
+                <section id="sec12">
+                    <h3>Integração com .NET</h3>
+                    <p>PowerShell tem acesso direto às classes .NET, permitindo integração profunda com o sistema.</p>
+
+                    <h4>Uso de Classes .NET</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Usar .NET classes
+$webClient = New-Object System.Net.WebClient
+$content = $webClient.DownloadString("https://api.github.com/users/octocat")
+$json = ConvertFrom-Json $content
+Write-Host "Nome: $($json.name)"
+
+# Trabalhar com arquivos ZIP
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::ExtractToDirectory("C:\\backup.zip", "C:\\extracted")
+
+# Usar Windows Forms para GUI simples
+Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.MessageBox]::Show("Backup concluído!", "Sucesso", "OK", "Information")</code></pre>
+
+                    <h4>Criar Scripts com WPF</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Script com interface WPF
+Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
+
+[xml]$xaml = @"
+&lt;Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        Title="PowerShell GUI" Height="200" Width="300">
+    &lt;Grid>
+        &lt;Button Name="btnClick" Content="Clique Aqui" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100"/>
+        &lt;TextBlock Name="txtResult" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+    &lt;/Grid>
+&lt;/Window>
+"@
+
+$reader = New-Object System.Xml.XmlNodeReader $xaml
+$window = [Windows.Markup.XamlReader]::Load($reader)
+
+$btnClick = $window.FindName("btnClick")
+$txtResult = $window.FindName("txtResult")
+
+$btnClick.Add_Click({
+    $txtResult.Text = "Olá do PowerShell! $(Get-Date)"
+})
+
+$window.ShowDialog()</code></pre>
+
+                    <h4>Integração com APIs REST</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-powershell"># Consumir API REST
+$apiUrl = "https://jsonplaceholder.typicode.com/posts"
+$posts = Invoke-RestMethod -Uri $apiUrl -Method Get
+
+foreach ($post in $posts | Select-Object -First 5) {
+    Write-Host "Título: $($post.title)" -ForegroundColor Yellow
+    Write-Host "Conteúdo: $($post.body)" -ForegroundColor Gray
+    Write-Host "---"
+}
+
+# Enviar dados para API
+$newPost = @{
+    title = "Novo post do PowerShell"
+    body = "Conteúdo criado via PowerShell"
+    userId = 1
+} | ConvertTo-Json
+
+$response = Invoke-RestMethod -Uri $apiUrl -Method Post -Body $newPost -ContentType "application/json"
+Write-Host "Post criado com ID: $($response.id)"</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises4">
+                <h2>Exercícios Práticos - Parte IV</h2>
+                <ol>
+                    <li>Configure PowerShell Remoting em duas máquinas</li>
+                    <li>Crie um módulo PowerShell personalizado</li>
+                    <li>Integre um script com uma API REST</li>
+                </ol>
+            </section>
+
+            <section id="master-projects">
+                <h2>Projetos Finais de Mestre CMD/PowerShell</h2>
+                <p>Estes projetos exigem conhecimento avançado e experiência prática. Cada um pode levar semanas ou meses.</p>
+                <ol>
+                    <li><strong>Sistema de Monitoramento Empresarial:</strong> Crie um dashboard PowerShell que monitore servidores Windows, coletando métricas de CPU, memória, disco e rede. Use remoting para múltiplas máquinas e gere relatórios automatizados.</li>
+                    <li><strong>Ferramenta de Deploy Automatizado:</strong> Desenvolva um sistema de deployment que use PowerShell DSC (Desired State Configuration) para configurar servidores automaticamente, instalar software e aplicar configurações de segurança.</li>
+                    <li><strong>Gerenciador de Infraestrutura Cloud:</strong> Construa scripts PowerShell que integrem com Azure/AWS, automatizando criação de VMs, configuração de redes, backup e monitoramento usando módulos nativos da nuvem.</li>
+                    <li><strong>Analisador de Logs Avançado:</strong> Crie uma suíte de ferramentas que analise logs de eventos Windows, logs IIS, logs de aplicação usando regex avançado, machine learning básico e gere dashboards interativos.</li>
+                    <li><strong>Framework de Automação Personalizado:</strong> Desenvolva um framework modular que permita criar workflows complexos de automação, com logging estruturado, tratamento de erros robusto e interface web para gerenciamento.</li>
+                </ol>
+                <p><strong>Dicas para Mestres:</strong> Sempre teste scripts em ambiente controlado, use versionamento para scripts críticos, documente tudo com comentários PowerShell, considere segurança (evite hardcode de credenciais), e mantenha compatibilidade entre versões.</p>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz de Mestre CMD/PowerShell</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor para Scripts</h2>
+                <p>Pratique scripts CMD e PowerShell aqui.</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Script</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO ---
+    function updateProgress() {
+        const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo', 'bonus', 'linux', 'nove', 'decimo'];
+        let visitedCount = 0;
+        let quizCount = 0;
+        pages.forEach(page => {
+            if (localStorage.getItem(`visited_${page}`)) visitedCount++;
+            if (localStorage.getItem(`quiz_${page}`)) quizCount++;
+        });
+        const totalProgress = ((visitedCount + quizCount) / (pages.length * 2)) * 100;
+        localStorage.setItem('overall_progress', totalProgress.toFixed(2));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Marcar visita à página
+        localStorage.setItem('visited_cdmpower', 'true');
+
+        // Atualizar progresso
+        updateProgress();
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                    // Marcar quiz como completo
+                    localStorage.setItem('quiz_cdmpower', 'true');
+                    // Atualizar progresso
+                    updateProgress();
+                });
+            }
+        }
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/powershell');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu script CMD ou PowerShell aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        document.getElementById('run-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                // Simulação básica de PowerShell/CMD
+                const lines = code.split('\n');
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('#') || trimmed === '') continue;
+                    if (trimmed.toLowerCase().includes('write-host') || trimmed.toLowerCase().includes('echo')) {
+                        output += 'Olá do script!\n';
+                    } else if (trimmed.toLowerCase().includes('get-date')) {
+                        output += new Date().toString() + '\n';
+                    } else if (trimmed.toLowerCase().includes('dir') || trimmed.toLowerCase().includes('ls')) {
+                        output += 'Arquivo1.txt\nArquivo2.exe\nPasta1/\n';
+                    } else {
+                        output += `Comando simulado: ${trimmed}\n`;
+                    }
+                }
+                if (!output) output = 'Nenhuma saída detectada. Verifique o script.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Integração GitHub API
+        document.getElementById('load-github').addEventListener('click', async () => {
+            const examplesDiv = document.getElementById('github-examples');
+            const contentDiv = document.getElementById('github-content');
+            examplesDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando exemplos...</p>';
+            try {
+                const response = await fetch('https://api.github.com/search/repositories?q=powershell+automation&sort=stars&order=desc&per_page=5');
+                const data = await response.json();
+                let html = '<ul>';
+                data.items.forEach(repo => {
+                    html += `<li><a href="${repo.html_url}" target="_blank">${repo.name}</a> - ${repo.description}</li>`;
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar exemplos. Verifique sua conexão.</p>';
+            }
+        });
+
+        // Documentação
+        document.getElementById('load-docs').addEventListener('click', async () => {
+            const contentDiv = document.getElementById('docs-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                        <h4 class="font-semibold mb-2">📚 Documentação Oficial</h4>
+                        <ul class="space-y-2">
+                            <li><a href="https://docs.microsoft.com/en-us/powershell/" target="_blank" class="text-blue-600 dark:text-blue-400">📖 PowerShell Documentation</a></li>
+                            <li><a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/windows-commands" target="_blank" class="text-blue-600 dark:text-blue-400">💻 Windows Commands Reference</a></li>
+                            <li><a href="https://ss64.com/" target="_blank" class="text-blue-600 dark:text-blue-400">🔍 SS64 Command Reference</a></li>
+                            <li><a href="https://www.powershellgallery.com/" target="_blank" class="text-blue-600 dark:text-blue-400">📦 PowerShell Gallery</a></li>
+                        </ul>
+                    </div>
+                    <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                        <h4 class="font-semibold mb-2">🎯 Bibliotecas de Comandos</h4>
+                        <ul class="space-y-2">
+                            <li><a href="https://github.com/PowerShell/PowerShell/tree/master/docs/learning" target="_blank" class="text-blue-600 dark:text-blue-400">📚 PowerShell Learning Resources</a></li>
+                            <li><a href="https://www.reddit.com/r/PowerShell/" target="_blank" class="text-blue-600 dark:text-blue-400">💬 r/PowerShell Community</a></li>
+                            <li><a href="https://www.powershell.org/" target="_blank" class="text-blue-600 dark:text-blue-400">🌐 PowerShell.org</a></li>
+                            <li><a href="https://adamtheautomator.com/" target="_blank" class="text-blue-600 dark:text-blue-400">🤖 Adam the Automator</a></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Scripts PowerShell
+        document.getElementById('load-scripts').addEventListener('click', async () => {
+            const contentDiv = document.getElementById('scripts-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                        <h4 class="font-semibold mb-2">🚀 Scripts Essenciais</h4>
+                        <ul class="space-y-2">
+                            <li><a href="https://github.com/microsoft/Windows-Admin-Center" target="_blank" class="text-blue-600 dark:text-blue-400">🖥️ Windows Admin Center</a></li>
+                            <li><a href="https://github.com/PowerShell/Win32-OpenSSH" target="_blank" class="text-blue-600 dark:text-blue-400">🔐 OpenSSH for Windows</a></li>
+                            <li><a href="https://github.com/microsoft/winget-cli" target="_blank" class="text-blue-600 dark:text-blue-400">📦 WinGet Package Manager</a></li>
+                            <li><a href="https://github.com/microsoft/WSL" target="_blank" class="text-blue-600 dark:text-blue-400">🐧 Windows Subsystem for Linux</a></li>
+                        </ul>
+                    </div>
+                    <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                        <h4 class="font-semibold mb-2">🔧 Ferramentas de Automação</h4>
+                        <ul class="space-y-2">
+                            <li><a href="https://github.com/PowerShell/PSDscResources" target="_blank" class="text-blue-600 dark:text-blue-400">⚙️ PowerShell DSC Resources</a></li>
+                            <li><a href="https://github.com/PowerShell/PowerShell" target="_blank" class="text-blue-600 dark:text-blue-400">💪 PowerShell Core</a></li>
+                            <li><a href="https://github.com/PowerShell/SecretManagement" target="_blank" class="text-blue-600 dark:text-blue-400">🔒 Secret Management</a></li>
+                            <li><a href="https://github.com/PowerShell/platyPS" target="_blank" class="text-blue-600 dark:text-blue-400">📝 PlatyPS (Documentação)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        });
+    });
+    </script>
+</body>
+</html>

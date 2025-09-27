@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevBooks - Mestre em Linux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        .book-content ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left-color: #3b82f6;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center" data-page="home">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <!-- Homepage -->
+        <section id="home" class="page active">
+            <div class="container mx-auto px-6 py-20 text-center">
+                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-6">
+                    Mestre em Linux: Sistema Operacional Universal
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    Domine o sistema operacional que alimenta a nuvem, servidores e dispositivos IoT. Da linha de comando ao kernel, torne-se um verdadeiro mestre Linux.
+                </p>
+            </div>
+
+            <div class="container mx-auto px-6 py-12">
+                <h2 class="text-3xl font-bold text-center mb-12">Recursos para Mestres Linux</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-orange-600 dark:text-orange-400">Arquitetura do Kernel</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Explore o coração do Linux: scheduler, memória virtual, sistema de arquivos e drivers.
+                        </p>
+                        <a href="#" data-page="book-reader" class="inline-block bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors">Explorar</a>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <h3 class="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">Administração Avançada</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                            Gerencie sistemas em produção: containers, orquestração, monitoramento e segurança.
+                        </p>
+                        <button id="load-github" class="inline-block bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">Carregar Exemplos</button>
+                    </div>
+                </div>
+                <div id="github-examples" class="mt-8 hidden">
+                    <h3 class="text-2xl font-bold mb-4">Exemplos do GitHub</h3>
+                    <div id="github-content"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Discussões no Stack Overflow</h3>
+                    <button id="load-stackoverflow" class="inline-block bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">Carregar Perguntas sobre Linux</button>
+                    <div id="stackoverflow-content" class="mt-4 hidden"></div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-2xl font-bold mb-4">Issues no GitHub Linux</h3>
+                    <button id="load-github-issues" class="inline-block bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">Carregar Issues do Kernel</button>
+                    <div id="github-issues-content" class="mt-4 hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Reader Page -->
+        <section id="book-reader" class="page">
+            <div class="flex min-h-screen">
+                <!-- Sidebar -->
+                <aside id="sidebar" class="fixed left-0 top-16 w-80 h-screen bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 overflow-y-auto hidden lg:block z-30">
+                    <h2 class="text-xl font-bold mb-4">Sumário</h2>
+                    <nav id="table-of-contents" aria-label="Navegação do livro"></nav>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="flex-1 p-6 lg:ml-80">
+                    <button id="menu-button" class="lg:hidden mb-4 p-2 bg-gray-200 dark:bg-gray-700 rounded" aria-label="Abrir menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div id="book-content-container" class="book-content prose prose-lg max-w-none"></div>
+                </div>
+            </div>
+            <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-10 hidden lg:hidden"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600 dark:text-gray-400">
+            <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
+            <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
+            <div class="mt-4 space-x-4">
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // --- BOOK CONTENT ---
+    const bookData = {
+        title: "Mestre em Linux: Sistema Operacional Universal",
+        parts: [
+            { title: "Parte I: Fundamentos do Linux", sections: [{ id: "sec1", title: "Arquitetura e Boot" }, { id: "sec2", title: "Sistema de Arquivos" }, { id: "sec3", title: "Permissões e Usuários" }, { id: "sec13", title: "Distribuições Linux" }] },
+            { title: "Parte II: Administração de Sistemas", sections: [{ id: "sec4", title: "Processos e Serviços" }, { id: "sec5", title: "Rede e Firewall" }, { id: "sec6", title: "Armazenamento e LVM" }] },
+            { title: "Parte III: Desenvolvimento e Kernel", sections: [{ id: "sec7", title: "Shell Scripting Avançado" }, { id: "sec8", title: "Desenvolvimento de Drivers" }, { id: "sec9", title: "Kernel Hacking" }] },
+            { title: "Parte IV: Containers e Orquestração", sections: [{ id: "sec10", title: "Docker e Podman" }, { id: "sec11", title: "Kubernetes Basics" }, { id: "sec12", title: "Infraestrutura como Código" }] }
+        ],
+        quiz: [
+            {
+                question: "Qual é a função principal do init system no Linux?",
+                options: ["Gerenciar dispositivos USB", "Inicializar processos do sistema", "Controlar a interface gráfica", "Gerenciar memória RAM"],
+                answer: 1
+            },
+            {
+                question: "O que significa LVM no contexto Linux?",
+                options: ["Linux Virtual Machine", "Logical Volume Manager", "Linux Volume Manager", "Large Virtual Memory"],
+                answer: 1
+            },
+            {
+                question: "Qual comando mostra informações detalhadas sobre processos?",
+                options: ["ps aux", "top", "htop", "Todos acima"],
+                answer: 3
+            },
+            {
+                question: "O que é um inode no sistema de arquivos Linux?",
+                options: ["Um tipo de arquivo", "Estrutura que armazena metadados", "Um comando do terminal", "Um tipo de permissão"],
+                answer: 1
+            },
+            {
+                question: "Qual é a diferença entre hard link e soft link?",
+                options: ["Hard link duplica o arquivo, soft link aponta", "Soft link duplica, hard link aponta", "São iguais", "Hard link é mais rápido"],
+                answer: 0
+            }
+        ],
+        contentHTML: `
+            <header class="mb-12"><h1 class="text-5xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">Mestre em Linux: Sistema Operacional Universal</h1></header>
+
+            <section id="part1">
+                <h2>Parte I: Fundamentos do Linux</h2>
+                <section id="sec1">
+                    <h3>Arquitetura e Boot</h3>
+                    <p>O Linux segue uma arquitetura monolítica modular. O processo de boot começa com o BIOS/UEFI carregando o bootloader (GRUB), que então carrega o kernel e o initramfs. O kernel inicializa drivers, monta o sistema de arquivos raiz e inicia o init system (systemd).</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Verificar versão do kernel
+uname -a
+
+# Ver status do systemd
+systemctl status
+
+# Ver processos de inicialização
+dmesg | head -20</code></pre>
+                </section>
+                <section id="sec2">
+                    <h3>Sistema de Arquivos</h3>
+                    <p>O Linux usa uma hierarquia unificada de sistemas de arquivos. Tudo começa em / (root). Arquivos são organizados em diretórios como /bin, /etc, /home, /var. O sistema suporta diversos formatos: ext4, Btrfs, XFS, ZFS.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Estrutura de diretórios
+ls -la /
+
+# Informações do sistema de arquivos
+df -h
+
+# Montar um dispositivo
+mount /dev/sdb1 /mnt</code></pre>
+                </section>
+                <section id="sec3">
+                    <h3>Permissões e Usuários</h3>
+                    <p>Cada arquivo tem permissões para dono (u), grupo (g) e outros (o). Permissões são leitura (r), escrita (w) e execução (x). Usuários são gerenciados através de /etc/passwd e /etc/shadow.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Ver permissões
+ls -l arquivo.txt
+
+# Mudar permissões
+chmod 755 script.sh
+chmod u+x,g-w,o-r arquivo.txt
+
+# Mudar dono
+chown usuario:grupo arquivo.txt
+
+# Gerenciar usuários
+useradd novo_usuario
+usermod -aG sudo usuario</code></pre>
+                </section>
+                <section id="sec13">
+                    <h3>Distribuições Linux</h3>
+                    <p>Linux não é um sistema operacional único, mas uma família de distribuições (distros) baseadas no kernel Linux. Cada distro oferece diferentes filosofias, gerenciadores de pacotes e públicos-alvo. Aqui estão as principais distribuições:</p>
+
+                    <h4>1. Ubuntu</h4>
+                    <p>A distro mais popular para desktops e servidores. Baseada no Debian, conhecida por sua facilidade de uso e suporte de longo prazo (LTS).</p>
+                    <p><strong>Download:</strong> <a href="https://ubuntu.com/download" target="_blank">ubuntu.com/download</a></p>
+                    <p><strong>Instalação:</strong> Baixe a ISO, crie um USB bootável com Rufus ou Etcher, reinicie e siga o instalador gráfico.</p>
+
+                    <h4>2. Fedora</h4>
+                    <p>Distribuição inovadora patrocinada pela Red Hat. Foca em tecnologias cutting-edge e é upstream para RHEL/CentOS.</p>
+                    <p><strong>Download:</strong> <a href="https://getfedora.org/" target="_blank">getfedora.org</a></p>
+                    <p><strong>Instalação:</strong> Similar ao Ubuntu, use o Anaconda installer. Ótimo para desenvolvimento e testing de novas features.</p>
+
+                    <h4>3. Debian</h4>
+                    <p>O "avô" de muitas distros. Conhecido por estabilidade, filosofia open-source pura e gerenciador de pacotes apt.</p>
+                    <p><strong>Download:</strong> <a href="https://www.debian.org/CD/" target="_blank">debian.org/CD</a></p>
+                    <p><strong>Instalação:</strong> Processo tradicional, sem interface gráfica por padrão. Ideal para servidores estáveis.</p>
+
+                    <h4>4. CentOS Stream / RHEL</h4>
+                    <p>Distribuição enterprise. CentOS Stream é a upstream gratuita do RHEL (Red Hat Enterprise Linux).</p>
+                    <p><strong>Download:</strong> <a href="https://www.centos.org/download/" target="_blank">centos.org/download</a></p>
+                    <p><strong>Instalação:</strong> Use para ambientes corporativos. Suporte pago disponível para RHEL.</p>
+
+                    <h4>5. Linux Mint</h4>
+                    <p>Baseado no Ubuntu, focado em desktop. Interface familiar para usuários vindos do Windows.</p>
+                    <p><strong>Download:</strong> <a href="https://linuxmint.com/download.php" target="_blank">linuxmint.com/download</a></p>
+                    <p><strong>Instalação:</strong> Muito simples, instalador gráfico intuitivo. Bom para iniciantes.</p>
+
+                    <h4>6. Arch Linux</h4>
+                    <p>Distribuição rolling release para usuários avançados. "A melhor maneira de aprender Linux".</p>
+                    <p><strong>Download:</strong> <a href="https://archlinux.org/download/" target="_blank">archlinux.org/download</a></p>
+                    <p><strong>Instalação:</strong> Manual completa via linha de comando. Excelente para aprender Linux profundamente.</p>
+
+                    <h4>7. openSUSE</h4>
+                    <p>Distribuição europeia conhecida por YaST (ferramenta de configuração) e Btrfs como padrão.</p>
+                    <p><strong>Download:</strong> <a href="https://get.opensuse.org/" target="_blank">get.opensuse.org</a></p>
+                    <p><strong>Instalação:</strong> YaST facilita a configuração. Bom para desktops e servidores.</p>
+
+                    <h4>Dicas Gerais de Instalação</h4>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Verificar integridade da ISO (exemplo Ubuntu)
+sha256sum ubuntu.iso
+
+# Criar USB bootável no Linux
+sudo dd if=ubuntu.iso of=/dev/sdX bs=4M status=progress
+
+# No Windows: Use Rufus
+# Baixe Rufus, selecione ISO, escolha USB, clique em Start
+
+# Verificar se está em modo UEFI/BIOS correto
+# Geralmente F2, F10, F12 ou Del na inicialização</code></pre>
+
+                    <p><strong>Escolhendo uma Distro:</strong></p>
+                    <ul>
+                        <li><strong>Para iniciantes:</strong> Ubuntu, Linux Mint</li>
+                        <li><strong>Para desenvolvimento:</strong> Fedora, Ubuntu</li>
+                        <li><strong>Para servidores:</strong> Debian, CentOS, Ubuntu Server</li>
+                        <li><strong>Para aprendizado avançado:</strong> Arch Linux</li>
+                        <li><strong>Para enterprise:</strong> RHEL, SUSE</li>
+                    </ul>
+                </section>
+            </section>
+
+            <section id="exercises1">
+                <h2>Exercícios Práticos - Parte I</h2>
+                <ol>
+                    <li>Analise o processo de boot do seu sistema usando journalctl</li>
+                    <li>Crie uma estrutura de diretórios seguindo o FHS (Filesystem Hierarchy Standard)</li>
+                    <li>Configure permissões apropriadas para um servidor web</li>
+                </ol>
+            </section>
+
+            <section id="part2">
+                <h2>Parte II: Administração de Sistemas</h2>
+                <section id="sec4">
+                    <h3>Processos e Serviços</h3>
+                    <p>Processos são instâncias de programas em execução. O kernel gerencia agendamento, memória e recursos. Serviços são processos que rodam em background, gerenciados por systemd.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Ver processos
+ps aux | head
+top
+htop
+
+# Gerenciar serviços
+systemctl start nginx
+systemctl enable nginx
+systemctl status nginx
+
+# Sinais para processos
+kill -9 PID
+killall nome_processo</code></pre>
+                </section>
+                <section id="sec5">
+                    <h3>Rede e Firewall</h3>
+                    <p>Linux tem poderosas ferramentas de rede. iptables/nftables para firewall, NetworkManager para configuração, e ferramentas como ss, netstat, ip para diagnóstico.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Configurar interface de rede
+ip addr show
+ip route show
+
+# Firewall com ufw
+ufw enable
+ufw allow 22/tcp
+ufw status
+
+# Diagnóstico de rede
+ping google.com
+traceroute google.com
+ss -tuln</code></pre>
+                </section>
+                <section id="sec6">
+                    <h3>Armazenamento e LVM</h3>
+                    <p>LVM (Logical Volume Manager) permite gerenciamento flexível de armazenamento. Permite redimensionar volumes, snapshots e RAID por software.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Ver volumes LVM
+lvdisplay
+vgdisplay
+pvdisplay
+
+# Criar volume lógico
+lvcreate -L 10G -n meu_volume meu_vg
+
+# Redimensionar
+lvextend -L +5G /dev/meu_vg/meu_volume
+resize2fs /dev/meu_vg/meu_volume</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises2">
+                <h2>Exercícios Práticos - Parte II</h2>
+                <ol>
+                    <li>Configure um servidor web Apache/Nginx com virtual hosts</li>
+                    <li>Implemente regras de firewall para proteger um servidor</li>
+                    <li>Configure LVM com RAID 1 para redundância</li>
+                </ol>
+            </section>
+
+            <section id="part3">
+                <h2>Parte III: Desenvolvimento e Kernel</h2>
+                <section id="sec7">
+                    <h3>Shell Scripting Avançado</h3>
+                    <p>Bash scripting avançado inclui funções, traps, debugging e manipulação de strings. Scripts devem seguir boas práticas: usar set -e, validar entrada, logging.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash">#!/bin/bash
+set -euo pipefail
+
+# Função com logging
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" >&2
+}
+
+# Processar argumentos
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -f|--file)
+            FILE="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Uso: $0 [-f FILE]"
+            exit 0
+            ;;
+        *)
+            echo "Opção desconhecida: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# Verificar se arquivo existe
+[[ -f "$FILE" ]] || { log "Arquivo não encontrado: $FILE"; exit 1; }
+
+log "Processando $FILE"</code></pre>
+                </section>
+                <section id="sec8">
+                    <h3>Desenvolvimento de Drivers</h3>
+                    <p>Drivers Linux são módulos do kernel escritos em C. Usam APIs específicas do kernel, gerenciamento de memória kmalloc/kfree, e comunicação com hardware via portas I/O ou MMIO.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-c">#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+
+static int __init meu_driver_init(void) {
+    pr_info("Driver inicializado\n");
+    return 0;
+}
+
+static void __exit meu_driver_exit(void) {
+    pr_info("Driver removido\n");
+}
+
+module_init(meu_driver_init);
+module_exit(meu_driver_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Seu Nome");
+MODULE_DESCRIPTION("Exemplo de driver Linux");</code></pre>
+                </section>
+                <section id="sec9">
+                    <h3>Kernel Hacking</h3>
+                    <p>Contribuir para o kernel Linux envolve entender o código fonte, usar ferramentas como git, seguir convenções de código, e passar por code review rigoroso.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-bash"># Clonar kernel
+git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+# Configurar build
+make menuconfig
+make -j$(nproc)
+
+# Instalar módulos
+sudo make modules_install
+sudo make install
+
+# Debugging com kgdb
+# Adicionar kgdboc=ttyS0,115200 aos parâmetros do kernel</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises3">
+                <h2>Exercícios Práticos - Parte III</h2>
+                <ol>
+                    <li>Escreva um script de backup automatizado com logging e verificação</li>
+                    <li>Desenvolva um driver simples para um dispositivo de caractere</li>
+                    <li>Compile um kernel customizado com patches específicos</li>
+                </ol>
+            </section>
+
+            <section id="part4">
+                <h2>Parte IV: Containers e Orquestração</h2>
+                <section id="sec10">
+                    <h3>Docker e Podman</h3>
+                    <p>Containers isolam aplicações com namespaces e cgroups. Docker usa daemon, Podman é daemonless. Ambos suportam Dockerfile para build automatizado.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-dockerfile"># Dockerfile exemplo
+FROM ubuntu:20.04
+RUN apt-get update && apt-get install -y nginx
+COPY index.html /var/www/html/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+# Comandos Docker
+docker build -t minha_app .
+docker run -d -p 8080:80 minha_app
+docker-compose up -d</code></pre>
+                </section>
+                <section id="sec11">
+                    <h3>Kubernetes Basics</h3>
+                    <p>Kubernetes orquestra containers em cluster. Usa conceitos como Pods, Services, Deployments. Ferramentas como kubectl, helm, kustomize.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer</code></pre>
+                </section>
+                <section id="sec12">
+                    <h3>Infraestrutura como Código</h3>
+                    <p>Terraform, Ansible, Puppet permitem definir infraestrutura como código. Versionamento, testes, automação de deployment.</p>
+                    <pre class="bg-gray-900 dark:bg-black text-white p-4 rounded-lg my-4 font-mono text-sm"><code class="language-yaml"># Ansible playbook
+---
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Copy website files
+      copy:
+        src: /local/files/
+        dest: /var/www/html/
+
+    - name: Start nginx
+      service:
+        name: nginx
+        state: started
+
+# Terraform
+resource "aws_instance" "web" {
+  ami           = "ami-12345"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "WebServer"
+  }
+}</code></pre>
+                </section>
+            </section>
+
+            <section id="exercises4">
+                <h2>Exercícios Práticos - Parte IV</h2>
+                <ol>
+                    <li>Containerize uma aplicação web completa com Docker</li>
+                    <li>Deploy uma aplicação no Kubernetes com helm charts</li>
+                    <li>Automatize provisionamento de infraestrutura com Terraform</li>
+                </ol>
+            </section>
+
+            <section id="master-projects">
+                <h2>Projetos Finais de Mestre Linux</h2>
+                <p>Estes projetos exigem conhecimento avançado e experiência prática. Cada um pode levar semanas ou meses.</p>
+                <ol>
+                    <li><strong>Servidor de Alta Disponibilidade:</strong> Configure um cluster com HAProxy load balancer, Keepalived para failover, e replicação de dados. Implemente monitoramento com Prometheus/Grafana.</li>
+                    <li><strong>Distribuição Linux Customizada:</strong> Crie sua própria distro baseada em Debian/Ubuntu. Use ferramentas como debootstrap, customize pacotes, crie ISOs bootáveis.</li>
+                    <li><strong>Kernel Module Avançado:</strong> Desenvolva um módulo que implementa um sistema de arquivos customizado ou um driver de dispositivo complexo. Contribua para o kernel upstream.</li>
+                    <li><strong>Plataforma de Containers:</strong> Construa uma plataforma PaaS usando Kubernetes, com CI/CD pipeline, service mesh (Istio), e auto-scaling inteligente.</li>
+                    <li><strong>Sistema de Monitoramento Empresarial:</strong> Implemente ELK stack (Elasticsearch, Logstash, Kibana) com Beats para coleta de métricas, logs centralizados e dashboards customizados.</li>
+                </ol>
+                <p><strong>Dicas para Mestres Linux:</strong> Sempre use SELinux/AppArmor, mantenha sistemas atualizados, faça backups regulares. Participe da comunidade: LKML, Reddit r/linux, conferências como Linux Plumbers.</p>
+            </section>
+
+            <section id="quiz">
+                <h2>Quiz de Mestre Linux</h2>
+                <div id="quiz-container"></div>
+            </section>
+
+            <section id="editor">
+                <h2>Editor para Scripts Linux</h2>
+                <p>Pratique scripts Bash e configurações aqui.</p>
+                <div id="code-editor" tabindex="0" aria-label="Editor de código Bash" style="min-height:200px; height: 200px; width: 100%; border: 1px solid #ccc; border-radius: 4px;"></div>
+                <div class="mt-4 flex space-x-2">
+                    <button id="copy-code" class="bg-blue-500 text-white px-4 py-2 rounded">Copiar Código</button>
+                    <button id="run-code" class="bg-green-500 text-white px-4 py-2 rounded">Executar Script</button>
+                </div>
+            </section>
+
+            <!-- Modal para resultado -->
+            <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+                    <h3 class="text-lg font-bold mb-4">Resultado da Execução</h3>
+                    <pre id="modal-output" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-sm font-mono"></pre>
+                    <button id="close-modal" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fechar</button>
+                </div>
+            </div>
+        `
+    };
+
+    // --- SCRIPT LÓGICO ---
+    function updateProgress() {
+        const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo', 'linux'];
+        let visitedCount = 0;
+        let quizCount = 0;
+        pages.forEach(page => {
+            if (localStorage.getItem(`visited_${page}`)) visitedCount++;
+            if (localStorage.getItem(`quiz_${page}`)) quizCount++;
+        });
+        const totalProgress = ((visitedCount + quizCount) / (pages.length * 2)) * 100;
+        localStorage.setItem('overall_progress', totalProgress.toFixed(2));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Marcar visita à página
+        localStorage.setItem('visited_linux', 'true');
+
+        // Atualizar progresso
+        updateProgress();
+        const themeToggle = document.getElementById('theme-toggle');
+        const lightIcon = document.getElementById('theme-icon-light');
+        const darkIcon = document.getElementById('theme-icon-dark');
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        };
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let currentTheme = 'light';
+        if (savedTheme) {
+            currentTheme = savedTheme;
+        } else if (prefersDark) {
+            currentTheme = 'dark';
+        }
+        applyTheme(currentTheme);
+        themeToggle.addEventListener('click', () => {
+            const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            applyTheme(newTheme);
+        });
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('a[data-page]');
+        const showPage = (pageId) => {
+            pages.forEach(page => {
+                page.classList.remove('active', 'fade-in');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active', 'fade-in');
+            }
+            window.scrollTo(0, 0);
+            try {
+                if (editor) {
+                    editor.resize();
+                    editor.focus();
+                }
+            } catch (e) { /* ignore */ }
+        };
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+        const tocContainer = document.getElementById('table-of-contents');
+        const bookContentContainer = document.getElementById('book-content-container');
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+            part.sections.forEach((section) => {
+                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
+            });
+            tocHTML += '</ul></div>';
+        });
+        if (tocContainer) {
+            tocContainer.innerHTML = tocHTML;
+        }
+        if (bookContentContainer) {
+            bookContentContainer.innerHTML = bookData.contentHTML;
+        }
+        const quizContainer = document.getElementById('quiz-container');
+        if (!quizContainer) { console.warn('quiz-container not found'); }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        if (quizContainer) {
+            quizContainer.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    let score = 0;
+                    bookData.quiz.forEach((q, index) => {
+                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                        if (selected && parseInt(selected.value) === q.answer) score++;
+                    });
+                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
+                    // Marcar quiz como completo
+                    localStorage.setItem('quiz_linux', 'true');
+                    // Atualizar progresso
+                    updateProgress();
+                });
+            }
+        }
+        var editor = null;
+        if (window.ace && typeof ace.edit === 'function') {
+            try {
+                editor = ace.edit('code-editor');
+                editor.setTheme('ace/theme/monokai');
+                editor.session.setMode('ace/mode/sh');
+                editor.setOptions({
+                    fontSize: '14px',
+                    showPrintMargin: false,
+                    wrap: true
+                });
+                try { editor.focus(); } catch (e) { /* ignore */ }
+            } catch (e) {
+                console.warn('Ace editor failed to initialize:', e);
+            }
+        }
+        if (!editor) {
+            const textarea = document.createElement('textarea');
+            textarea.id = 'code-editor-fallback';
+            textarea.className = 'w-full h-full p-2 font-mono text-sm';
+            textarea.placeholder = 'Digite seu script Bash aqui...';
+            document.getElementById('code-editor').replaceWith(textarea);
+            editor = { getValue: () => textarea.value, setValue: (v) => textarea.value = v, focus: () => textarea.focus() };
+        }
+        document.getElementById('copy-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
+        });
+        document.getElementById('run-code').addEventListener('click', () => {
+            const code = editor.getValue();
+            let output = '';
+            try {
+                // Simulação básica de bash
+                const lines = code.split('\\n');
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('#') || trimmed === '') continue;
+                    if (trimmed.startsWith('echo ')) {
+                        output += trimmed.substring(5) + '\\n';
+                    } else if (trimmed === 'pwd') {
+                        output += '/home/user\\n';
+                    } else if (trimmed === 'whoami') {
+                        output += 'user\\n';
+                    } else if (trimmed === 'date') {
+                        output += new Date().toString() + '\\n';
+                    } else {
+                        output += `Comando não simulado: ${trimmed}\\n`;
+                    }
+                }
+                if (!output) output = 'Nenhuma saída detectada. Verifique o script.';
+            } catch (e) {
+                output = 'Erro na simulação: ' + e.message;
+            }
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-output').textContent = output;
+            modal.classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('result-modal').classList.add('hidden');
+        });
+        const menuButton = document.getElementById('menu-button');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const readerNavLinks = tocContainer.querySelectorAll('.nav-link');
+        const contentSections = bookContentContainer.querySelectorAll('section > section');
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+            overlay.classList.toggle('hidden');
+        }
+        if (menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+        readerNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (link) {
+                    if (entry.isIntersecting) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -75% 0px' });
+        contentSections.forEach(section => { observer.observe(section); });
+
+        // Integração GitHub API
+        document.getElementById('load-github').addEventListener('click', async () => {
+            const examplesDiv = document.getElementById('github-examples');
+            const contentDiv = document.getElementById('github-content');
+            examplesDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando exemplos...</p>';
+            try {
+                const response = await fetch('https://api.github.com/repos/torvalds/linux/contents/kernel?ref=master');
+                const data = await response.json();
+                let html = '<ul>';
+                data.slice(0, 5).forEach(file => {
+                    if (file.name.endsWith('.c') || file.name.endsWith('.h')) {
+                        html += `<li><a href="${file.html_url}" target="_blank">${file.name}</a> - Código do kernel Linux</li>`;
+                    }
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar exemplos. Verifique sua conexão.</p>';
+            }
+        });
+
+        // Integração Stack Overflow API
+        document.getElementById('load-stackoverflow').addEventListener('click', async () => {
+            const contentDiv = document.getElementById('stackoverflow-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando perguntas...</p>';
+            try {
+                const response = await fetch('https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&tagged=linux&site=stackoverflow&pagesize=5');
+                const data = await response.json();
+                let html = '<ul>';
+                data.items.forEach(question => {
+                    html += `<li><a href="${question.link}" target="_blank">${question.title}</a> - ${question.score} votos</li>`;
+                });
+                html += '</ul>';
+                contentDiv.innerHTML = html;
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar perguntas. Verifique sua conexão.</p>';
+            }
+        });
+
+        // GitHub Issues
+        document.getElementById('load-github-issues').addEventListener('click', async function() {
+            const contentDiv = document.getElementById('github-issues-content');
+            contentDiv.classList.remove('hidden');
+            contentDiv.innerHTML = '<p>Carregando issues...</p>';
+
+            try {
+                const response = await fetch('https://api.github.com/search/issues?q=repo:torvalds/linux+is:open&sort=updated&order=desc&per_page=10');
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    let html = '<div class="space-y-4">';
+                    data.items.forEach(issue => {
+                        html += `
+                            <div class="border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+                                <h4 class="font-semibold text-lg mb-2"><a href="${issue.html_url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">${issue.title}</a></h4>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Por ${issue.user.login} em ${new Date(issue.created_at).toLocaleDateString()}</p>
+                                <p class="text-sm">${issue.body ? issue.body.substring(0, 200) + '...' : 'Sem descrição'}</p>
+                                <div class="mt-2">
+                                    <span class="inline-block bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">${issue.state}</span>
+                                    <span class="inline-block bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full ml-2">${issue.comments} comentários</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    contentDiv.innerHTML = html;
+                } else {
+                    contentDiv.innerHTML = '<p>Nenhuma issue encontrada.</p>';
+                }
+            } catch (e) {
+                contentDiv.innerHTML = '<p>Erro ao carregar issues. Verifique sua conexão.</p>';
+            }
+        });
+    });
+    </script>
+</body>
+</html>
