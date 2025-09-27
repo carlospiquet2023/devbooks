@@ -225,6 +225,31 @@
                 question: "Qual é a diferença entre hard link e soft link?",
                 options: ["Hard link duplica o arquivo, soft link aponta", "Soft link duplica, hard link aponta", "São iguais", "Hard link é mais rápido"],
                 answer: 0
+            },
+            {
+                question: "Qual é o comando para instalar pacotes no Ubuntu?",
+                options: ["yum install", "apt-get install", "pacman -S", "dnf install"],
+                answer: 1
+            },
+            {
+                question: "O que faz o comando 'chmod 755 arquivo'?",
+                options: ["Remove permissões", "Define permissões rwxr-xr-x", "Muda proprietário", "Cria arquivo"],
+                answer: 1
+            },
+            {
+                question: "Qual shell é o padrão no Linux?",
+                options: ["csh", "bash", "zsh", "fish"],
+                answer: 1
+            },
+            {
+                question: "O que é um PID no Linux?",
+                options: ["Process ID", "Personal ID", "Package ID", "Port ID"],
+                answer: 0
+            },
+            {
+                question: "Qual comando lista arquivos em um diretório?",
+                options: ["dir", "ls", "list", "show"],
+                answer: 1
             }
         ],
         contentHTML: `
@@ -644,6 +669,33 @@ resource "aws_instance" "web" {
         localStorage.setItem('overall_progress', totalProgress.toFixed(2));
     }
 
+    function applyThemeLinux(theme, lightIcon, darkIcon) {
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            lightIcon.classList.remove('hidden');
+            darkIcon.classList.add('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            lightIcon.classList.add('hidden');
+            darkIcon.classList.remove('hidden');
+        }
+    }
+
+    function showPageLinux(pages, pageId, editor) {
+        pages.forEach(page => page.classList.remove('active', 'fade-in'));
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active', 'fade-in');
+        }
+        window.scrollTo(0, 0);
+        try {
+            if (editor) {
+                editor.resize();
+                editor.focus();
+            }
+        } catch (e) { console.warn('Editor focus/resize failed:', e); }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         // Marcar visita à página
         localStorage.setItem('visited_linux', 'true');
@@ -653,17 +705,7 @@ resource "aws_instance" "web" {
         const themeToggle = document.getElementById('theme-toggle');
         const lightIcon = document.getElementById('theme-icon-light');
         const darkIcon = document.getElementById('theme-icon-dark');
-        const applyTheme = (theme) => {
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                lightIcon.classList.add('hidden');
-                darkIcon.classList.remove('hidden');
-            }
-        };
+        // use applyThemeLinux helper defined above
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         let currentTheme = 'light';
@@ -672,11 +714,11 @@ resource "aws_instance" "web" {
         } else if (prefersDark) {
             currentTheme = 'dark';
         }
-        applyTheme(currentTheme);
+    applyThemeLinux(currentTheme, lightIcon, darkIcon);
         themeToggle.addEventListener('click', () => {
             const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
+            applyThemeLinux(newTheme, lightIcon, darkIcon);
         });
         const pages = document.querySelectorAll('.page');
         const navLinks = document.querySelectorAll('a[data-page]');
@@ -694,7 +736,7 @@ resource "aws_instance" "web" {
                     editor.resize();
                     editor.focus();
                 }
-            } catch (e) { /* ignore */ }
+            } catch (e) { console.warn('Editor focus/resize failed:', e); }
         };
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
@@ -705,48 +747,50 @@ resource "aws_instance" "web" {
         });
         const tocContainer = document.getElementById('table-of-contents');
         const bookContentContainer = document.getElementById('book-content-container');
-        let tocHTML = '';
-        bookData.parts.forEach((part) => {
-            tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
-            part.sections.forEach((section) => {
-                tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
-            });
-            tocHTML += '</ul></div>';
-        });
-        if (tocContainer) {
-            tocContainer.innerHTML = tocHTML;
-        }
-        if (bookContentContainer) {
-            bookContentContainer.innerHTML = bookData.contentHTML;
-        }
-        const quizContainer = document.getElementById('quiz-container');
-        if (!quizContainer) { console.warn('quiz-container not found'); }
-        let quizHTML = '';
-        bookData.quiz.forEach((q, index) => {
-            quizHTML += `<div class="mb-6">
-                <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
-                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
-            </div>`;
-        });
-        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
-        if (quizContainer) {
-            quizContainer.innerHTML = quizHTML;
-            const submitBtn = document.getElementById('submit-quiz');
-            if (submitBtn) {
-                submitBtn.addEventListener('click', () => {
-                    let score = 0;
-                    bookData.quiz.forEach((q, index) => {
-                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-                        if (selected && parseInt(selected.value) === q.answer) score++;
-                    });
-                    document.getElementById('quiz-result').innerHTML = `<p>Você acertou ${score} de ${bookData.quiz.length} perguntas.</p>`;
-                    // Marcar quiz como completo
-                    localStorage.setItem('quiz_linux', 'true');
-                    // Atualizar progresso
-                    updateProgress();
+        // Inicializa TOC e conteúdo do livro
+        function buildTOC_Linux(container, contentContainer, data) {
+            let tocHTML = '';
+            data.parts.forEach((part) => {
+                tocHTML += `<div class="mb-4"><h3 class="font-semibold text-gray-800 dark:text-gray-200">${part.title}</h3><ul class="ml-4">`;
+                part.sections.forEach((section) => {
+                    tocHTML += `<li><a href="#${section.id}" class="nav-link block py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600">${section.title}</a></li>`;
                 });
-            }
+                tocHTML += '</ul></div>';
+            });
+            if (container) container.innerHTML = tocHTML;
+            if (contentContainer) contentContainer.innerHTML = data.contentHTML;
         }
+
+        // Inicializa quiz de forma delegada
+        function buildQuiz_Linux(container, data) {
+            if (!container) { console.warn('quiz-container not found'); return; }
+            let quizHTML = '';
+            data.quiz.forEach((q, index) => {
+                quizHTML += `<div class="mb-6">
+                    <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+                    ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+                </div>`;
+            });
+            quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+            container.innerHTML = quizHTML;
+            const submitBtn = document.getElementById('submit-quiz');
+            if (!submitBtn) return;
+            submitBtn.addEventListener('click', () => {
+                let score = 0;
+                data.quiz.forEach((q, index) => {
+                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                    if (selected && parseInt(selected.value) === q.answer) score++;
+                });
+                const resultEl = document.getElementById('quiz-result');
+                if (resultEl) resultEl.innerHTML = `<p>Você acertou ${score} de ${data.quiz.length} perguntas.</p>`;
+                localStorage.setItem('quiz_linux', 'true');
+                updateProgress();
+            });
+        }
+        // executar builders
+        buildTOC_Linux(tocContainer, bookContentContainer, bookData);
+        const quizContainer = document.getElementById('quiz-container');
+        buildQuiz_Linux(quizContainer, bookData);
         var editor = null;
         if (window.ace && typeof ace.edit === 'function') {
             try {
@@ -758,7 +802,7 @@ resource "aws_instance" "web" {
                     showPrintMargin: false,
                     wrap: true
                 });
-                try { editor.focus(); } catch (e) { /* ignore */ }
+                try { editor.focus(); } catch (e) { console.warn('editor.focus failed:', e); }
             } catch (e) {
                 console.warn('Ace editor failed to initialize:', e);
             }
@@ -773,35 +817,114 @@ resource "aws_instance" "web" {
         }
         document.getElementById('copy-code').addEventListener('click', () => {
             const code = editor.getValue();
-            navigator.clipboard.writeText(code).then(() => alert('Código copiado!')).catch(() => alert('Erro ao copiar'));
-        });
-        document.getElementById('run-code').addEventListener('click', () => {
-            const code = editor.getValue();
-            let output = '';
-            try {
-                // Simulação básica de bash
-                const lines = code.split('\\n');
-                for (const line of lines) {
-                    const trimmed = line.trim();
-                    if (trimmed.startsWith('#') || trimmed === '') continue;
-                    if (trimmed.startsWith('echo ')) {
-                        output += trimmed.substring(5) + '\\n';
-                    } else if (trimmed === 'pwd') {
-                        output += '/home/user\\n';
-                    } else if (trimmed === 'whoami') {
-                        output += 'user\\n';
-                    } else if (trimmed === 'date') {
-                        output += new Date().toString() + '\\n';
-                    } else {
-                        output += `Comando não simulado: ${trimmed}\\n`;
+            (async () => {
+                try {
+                    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                        await navigator.clipboard.writeText(code);
+                        alert('Código copiado!');
+                        return;
                     }
+                    // fallback for older browsers / insecure contexts
+                    const ta = document.createElement('textarea');
+                    ta.value = code;
+                    ta.style.position = 'fixed';
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    const ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    if (ok) alert('Código copiado!');
+                    else throw new Error('Falha no fallback de cópia');
+                } catch (err) {
+                    alert('Erro ao copiar: ' + (err && err.message ? err.message : String(err)));
                 }
-                if (!output) output = 'Nenhuma saída detectada. Verifique o script.';
-            } catch (e) {
-                output = 'Erro na simulação: ' + e.message;
-            }
+            })();
+        });
+        document.getElementById('run-code').addEventListener('click', async () => {
+            const code = editor.getValue();
             const modal = document.getElementById('result-modal');
-            document.getElementById('modal-output').textContent = output;
+            const modalOutput = document.getElementById('modal-output');
+
+            function getSimulatedOutput(cmd) {
+                if (cmd.startsWith('echo ')) {
+                    return cmd.substring(5) + '\n';
+                } else if (cmd === 'pwd') {
+                    return '/home/user\n';
+                } else if (cmd === 'whoami') {
+                    return 'user\n';
+                } else if (cmd === 'date') {
+                    return new Date().toString() + '\n';
+                } else if (cmd === 'ls' || cmd.startsWith('ls ')) {
+                    return 'file1.txt  file2.txt  dir1/\n';
+                } else if (cmd.startsWith('mkdir ')) {
+                    return '';
+                } else if (cmd.startsWith('touch ')) {
+                    return '';
+                } else if (cmd.startsWith('cat ')) {
+                    const file = cmd.substring(4);
+                    if (file === 'file1.txt') return 'Conteúdo do arquivo 1\n';
+                    else if (file === 'file2.txt') return 'Conteúdo do arquivo 2\n';
+                    else return `cat: ${file}: Arquivo não encontrado\n`;
+                } else if (cmd === 'uname') {
+                    return 'Linux\n';
+                } else if (cmd === 'uname -a') {
+                    return 'Linux hostname 5.4.0-74-generic #83-Ubuntu SMP Sat May 8 02:35:39 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux\n';
+                } else {
+                    return `Comando não simulado: ${cmd}\n`;
+                }
+            }
+
+            async function simulateLocalBash(script) {
+                let out = '';
+                try {
+                    const lines = script.split('\n');
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('#') || trimmed === '') continue;
+                        out += getSimulatedOutput(trimmed);
+                    }
+                    if (!out) out = 'Nenhuma saída detectada. Verifique o script.';
+                } catch (err) {
+                    out = 'Erro na simulação: ' + (err && err.message ? err.message : String(err));
+                }
+                return out;
+            }
+
+            // Primeiro: tentar execução remota via API pública (sem depender disso)
+            let executed = false;
+            try {
+                try {
+                    const resp = await fetch('https://emkc.org/api/v2/piston/execute', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            language: 'bash',
+                            version: '5.1.0',
+                            files: [{ name: 'script.sh', content: code }],
+                            compile_timeout: 10000,
+                            run_timeout: 3000
+                        })
+                    });
+                    if (resp.ok) {
+                        const json = await resp.json();
+                        const out = json.run ? (json.run.stdout || json.run.output || '') : (json.output || json.stdout || '');
+                        modalOutput.textContent = out || '[sem saída]';
+                        executed = true;
+                    }
+                } catch (e) {
+                    console.warn('Remote bash execution failed, falling back to local simulator:', e);
+                    executed = false;
+                }
+            } catch (err) {
+                console.warn('Unexpected error while attempting remote execution:', err);
+                executed = false;
+            }
+
+            if (!executed) {
+                const simulated = await simulateLocalBash(code);
+                modalOutput.textContent = simulated || '[nenhuma saída]';
+            }
+
             modal.classList.remove('hidden');
         });
 
@@ -862,6 +985,7 @@ resource "aws_instance" "web" {
                 html += '</ul>';
                 contentDiv.innerHTML = html;
             } catch (e) {
+                console.warn('Failed to load GitHub examples:', e);
                 contentDiv.innerHTML = '<p>Erro ao carregar exemplos. Verifique sua conexão.</p>';
             }
         });
@@ -881,6 +1005,7 @@ resource "aws_instance" "web" {
                 html += '</ul>';
                 contentDiv.innerHTML = html;
             } catch (e) {
+                console.warn('Failed to load StackOverflow questions:', e);
                 contentDiv.innerHTML = '<p>Erro ao carregar perguntas. Verifique sua conexão.</p>';
             }
         });
@@ -916,6 +1041,7 @@ resource "aws_instance" "web" {
                     contentDiv.innerHTML = '<p>Nenhuma issue encontrada.</p>';
                 }
             } catch (e) {
+                console.warn('Failed to load GitHub issues:', e);
                 contentDiv.innerHTML = '<p>Erro ao carregar issues. Verifique sua conexão.</p>';
             }
         });
