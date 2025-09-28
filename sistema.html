@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Sistema: C + COBOL + HTML + CSS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Source Code Pro', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .book-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            color: #111827;
+        }
+        .dark .book-content h2 {
+            border-bottom-color: #374151;
+            color: #f9fafb;
+        }
+        .book-content h3 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+        .dark .book-content h3 {
+            color: #e5e7eb;
+        }
+        .book-content h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+        .dark .book-content h4 {
+            color: #d1d5db;
+        }
+        .book-content p, .book-content ul, .book-content ol {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+            color: #4b5563;
+        }
+        .dark .book-content p, .dark .book-content ul, .dark .book-content ol {
+            color: #9ca3af;
+        }
+        #sidebar a.active {
+            color: #3b82f6;
+            font-weight: 600;
+            border-left: 4px solid #3b82f6;
+        }
+        .book-content pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .dark .book-content pre {
+            background-color: #374151;
+            border-color: #4b5563;
+        }
+        .book-content code {
+            font-family: 'Source Code Pro', monospace;
+            background-color: #f3f4f6;
+            padding: 0.125rem 0.25rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .dark .book-content code {
+            background-color: #4b5563;
+            color: #e5e7eb;
+        }
+        .page {
+            display: none;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .dark .page {
+            background-color: #1f2937;
+            border-color: #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        .page.active {
+            display: block;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center" aria-label="Navegação principal">
+            <a href="#" class="font-bold text-2xl text-blue-600 dark:text-blue-500 flex items-center">
+                <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                DevBooks - Mini Sistema
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Alternar tema">
+                    <svg id="theme-icon-light" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container mx-auto px-6 py-8">
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="w-64 pr-8 hidden md:block">
+                <nav class="sticky top-24" aria-label="Navegação das seções">
+                    <ul class="space-y-2">
+                        <li><a href="#" data-page="calculadora" class="block py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors active">Calculadora</a></li>
+                        <li><a href="#" data-page="c" class="block py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">C</a></li>
+                        <li><a href="#" data-page="cobol" class="block py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">COBOL</a></li>
+                        <li><a href="#" data-page="html" class="block py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">HTML</a></li>
+                        <li><a href="#" data-page="css" class="block py-2 px-4 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors">CSS</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="flex-1">
+
+                <section id="calculadora" class="page active fade-in">
+                    <div class="book-content">
+                        <h2>Calculadora Simples</h2>
+                        <p>Use esta calculadora básica para operações aritméticas. A lógica pode ser implementada em C, COBOL, etc.</p>
+                        <h3>Como foi implementado no site:</h3>
+                        <ul>
+                            <li><strong>HTML:</strong> Define a estrutura da calculadora (display e botões). Ex.: <code>&lt;input id="display"&gt;</code> para o visor e <code>&lt;button onclick="appendToDisplay('1')"&gt;1&lt;/button&gt;</code> para os botões.</li>
+                            <li><strong>CSS:</strong> Estiliza a aparência (tamanhos, cores, layout). Ex.: Botões de 50x50px, display alinhado à direita.</li>
+                            <li><strong>JavaScript:</strong> Faz a lógica funcionar (adicionar números, calcular com eval). Ex.: Função <code>calculate()</code> processa a expressão.</li>
+                            <li><strong>C e COBOL:</strong> Exemplos nas outras seções mostram como replicar a lógica em linguagens de baixo nível.</li>
+                        </ul>
+                        <div id="calculator" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto">
+                            <input type="text" id="display" readonly class="w-full h-12 text-right text-xl mb-4 p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700">
+                            <div class="grid grid-cols-4 gap-2">
+                                <button onclick="appendToDisplay('7')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">7</button>
+                                <button onclick="appendToDisplay('8')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">8</button>
+                                <button onclick="appendToDisplay('9')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">9</button>
+                                <button onclick="appendToDisplay('/')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded">/</button>
+                                <button onclick="appendToDisplay('4')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">4</button>
+                                <button onclick="appendToDisplay('5')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">5</button>
+                                <button onclick="appendToDisplay('6')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">6</button>
+                                <button onclick="appendToDisplay('*')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded">*</button>
+                                <button onclick="appendToDisplay('1')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">1</button>
+                                <button onclick="appendToDisplay('2')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">2</button>
+                                <button onclick="appendToDisplay('3')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">3</button>
+                                <button onclick="appendToDisplay('-')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded">-</button>
+                                <button onclick="appendToDisplay('0')" class="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded">0</button>
+                                <button onclick="clearDisplay()" class="bg-red-500 hover:bg-red-600 text-white p-4 rounded">C</button>
+                                <button onclick="calculate()" class="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded col-span-2">=</button>
+                                <button onclick="appendToDisplay('+')" class="bg-green-500 hover:bg-green-600 text-white p-4 rounded">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="c" class="page fade-in">
+                    <div class="book-content">
+                        <h2>Linguagem C</h2>
+                        <p>C é uma linguagem de baixo nível, ideal para sistemas operacionais e aplicações eficientes.</p>
+                        <h3>Como foi usado no mini sistema:</h3>
+                        <p>O exemplo abaixo mostra como implementar a lógica da calculadora (operações aritméticas) em C. Lê entrada do usuário (dois números e operador) e calcula o resultado, demonstrando como linguagens de sistema podem lidar com cálculos simples. Para integrar no site, copie o código, compile e execute no terminal.</p>
+                        <h3>Exemplo: Calculadora Simples</h3>
+                        <pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    double a, b, result;
+    char op;
+    printf("Digite dois números e um operador (+, -, *, /): ");
+    scanf("%lf %c %lf", &a, &op, &b);
+    switch(op) {
+        case '+': result = a + b; break;
+        case '-': result = a - b; break;
+        case '*': result = a * b; break;
+        case '/': if(b != 0) result = a / b; else { printf("Erro: divisão por zero\n"); return 1; } break;
+        default: printf("Operador inválido\n"); return 1;
+    }
+    printf("Resultado: %.2f\n", result);
+    return 0;
+}</code></pre>
+                        <p>Para executar: Compile com <code>gcc calc.c -o calc</code> e rode <code>./calc</code>.</p>
+                    </div>
+                </section>
+
+                <section id="cobol" class="page fade-in">
+                    <div class="book-content">
+                        <h2>Linguagem COBOL</h2>
+                        <p>COBOL é usado em sistemas empresariais e financeiros, com sintaxe verbosa.</p>
+                        <h3>Como foi usado no mini sistema:</h3>
+                        <p>O exemplo abaixo replica a lógica da calculadora em COBOL, mostrando como linguagens empresariais podem processar cálculos. Usa estruturas como EVALUATE para operadores e COMPUTE para operações, contrastando com a versão web. Para usar, compile e execute separadamente.</p>
+                        <h3>Exemplo: Calculadora Simples</h3>
+                        <pre><code class="language-cobol">IDENTIFICATION DIVISION.
+PROGRAM-ID. CALCULATOR.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 A PIC 9(5)V99.
+01 B PIC 9(5)V99.
+01 RESULT PIC 9(5)V99.
+01 OP PIC X.
+
+PROCEDURE DIVISION.
+    DISPLAY "Digite dois números e um operador (+, -, *, /):".
+    ACCEPT A.
+    ACCEPT OP.
+    ACCEPT B.
+    EVALUATE OP
+        WHEN '+'
+            COMPUTE RESULT = A + B
+        WHEN '-'
+            COMPUTE RESULT = A - B
+        WHEN '*'
+            COMPUTE RESULT = A * B
+        WHEN '/'
+            IF B NOT = 0
+                COMPUTE RESULT = A / B
+            ELSE
+                DISPLAY "Erro: divisão por zero"
+                STOP RUN
+        WHEN OTHER
+            DISPLAY "Operador inválido"
+            STOP RUN
+    END-EVALUATE.
+    DISPLAY "Resultado: " RESULT.
+    STOP RUN.</code></pre>
+                        <p>Para executar: Use um compilador COBOL como OpenCOBOL (<code>cobc -x calc.cob</code>).</p>
+                    </div>
+                </section>
+
+                <section id="html" class="page fade-in">
+                    <div class="book-content">
+                        <h2>HTML</h2>
+                        <p>HTML estrutura o conteúdo da web.</p>
+                        <h3>Como foi usado no mini sistema:</h3>
+                        <p>O HTML é a base de todo o site: define a estrutura da página (header, nav, sections), incluindo a calculadora (botões e display). Sem HTML, não haveria layout. O exemplo abaixo mostra uma página básica, similar à estrutura geral do sistema.html.</p>
+                        <h3>Exemplo: Página Básica</h3>
+                        <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Título&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Olá, Mundo!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </section>
+
+                <section id="css" class="page fade-in">
+                    <div class="book-content">
+                        <h2>CSS</h2>
+                        <p>CSS estiliza páginas HTML.</p>
+                        <h3>Como foi usado no mini sistema:</h3>
+                        <p>O CSS deixa o site visualmente atraente: cores (azul no header, verde nos botões), layout (centralizado, com sombras), e responsividade. Na calculadora, define tamanhos e alinhamento. O exemplo abaixo mostra estilos básicos, aplicados em todo o sistema.html.</p>
+                        <h3>Exemplo: Estilo Básico</h3>
+                        <pre><code class="language-css">body {
+    background-color: lightblue;
+}
+
+h1 {
+    color: navy;
+    text-align: center;
+}</code></pre>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-100 dark:bg-gray-800 py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-600 dark:text-gray-400">Mini Sistema criado para demonstração. © 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle - Começar no modo dark
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const themeIconLight = document.getElementById('theme-icon-light');
+        const themeIconDark = document.getElementById('theme-icon-dark');
+
+        // Definir tema inicial como dark
+        html.classList.add('dark');
+        themeIconLight.classList.add('hidden');
+        themeIconDark.classList.remove('hidden');
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            themeIconLight.classList.toggle('hidden');
+            themeIconDark.classList.toggle('hidden');
+        });
+
+        // Page navigation
+        const links = document.querySelectorAll('#sidebar a, nav a');
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            // Update active link
+            links.forEach(link => link.classList.remove('active'));
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+        }
+
+        // Calculator functions
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        function calculate() {
+            try {
+                document.getElementById('display').value = eval(document.getElementById('display').value);
+            } catch {
+                document.getElementById('display').value = 'Erro';
+            }
+        }
+    </script>
+</body>
+</html>

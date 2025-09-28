@@ -324,6 +324,23 @@
                             </div>
                         </a>
                     </div>
+                    <!-- Mini Sistema Card -->
+                    <div class="book-card-container">
+                        <a href="sistema.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Mini Sistema Integrado — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-purple-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-4xl font-black text-gray-500 dark:text-gray-700 group-hover:text-purple-500 transition-colors">⚙️</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Mini Sistema Integrado</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">C + COBOL + HTML + CSS</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -652,6 +669,162 @@ int main(void) {
     };
 
     // --- SCRIPT LÓGICO (igual ao anterior) ---
+
+    // Helper: construir TOC a partir de bookData
+    function buildTOC(bookData, tocContainer) {
+        let tocHTML = '';
+        bookData.parts.forEach((part) => {
+            tocHTML += `
+                <div>
+                    <h2 class="font-semibold text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wider mb-2">${part.title}</h2>
+                    <ul class="space-y-1">
+                        ${part.sections.map(section => `
+                            <li><a href="#${section.id}" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200 border-l-2 border-transparent pl-3">${section.title}</a></li>
+                        `).join('')}
+                    </ul>
+                </div>`;
+        });
+        if (tocContainer) tocContainer.innerHTML = tocHTML;
+        else console.warn('table-of-contents container not found');
+    }
+
+    // Helper: construir quiz e conectar submissão
+    function buildQuiz(bookData, quizContainer) {
+        if (!quizContainer) { console.warn('quiz-container not found'); return; }
+        let quizHTML = '';
+        bookData.quiz.forEach((q, index) => {
+            quizHTML += `<div class="mb-6">
+                <h3 class="text-lg font-semibold mb-2">${index + 1}. ${q.question}</h3>
+                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
+            </div>`;
+        });
+        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
+        quizContainer.innerHTML = quizHTML;
+        const submitBtn = document.getElementById('submit-quiz');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
+                let score = 0;
+                bookData.quiz.forEach((q, index) => {
+                    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                    if (selected && parseInt(selected.value) === q.answer) score++;
+                });
+                const quizResult = document.getElementById('quiz-result');
+                if (quizResult) quizResult.innerHTML = `Você acertou ${score} de ${bookData.quiz.length} perguntas.`;
+            });
+        }
+    }
+
+    // Helper: avaliar argumento (string/char/number/identifier) com varMap opcional
+    function evalArg(a, varMap) {
+        if (!a) return '[?]';
+        a = a.trim();
+        // string literal
+        const sm = a.match(/^"((?:\\.|[^"\\])*)"$/s);
+        if (sm) return unescapeCStr(sm[1]);
+        // char literal
+        const cm = a.match(/^'((?:\\.|[^'\\])*)'$/s);
+        if (cm) return unescapeCStr(cm[1]);
+        // numeric literal
+        const nm = a.match(/^([-+]?\d+(?:\.\d+)?)/);
+        if (nm) return nm[1];
+        // identifier variable
+        const id = a.match(/^([A-Za-z_]\w*)$/);
+        if (id && varMap && Object.hasOwn && Object.hasOwn(varMap, id[1])) return varMap[id[1]];
+        return '[?]';
+    }
+
+    // Helper: construir um mapa simples de variáveis a partir do código (int/float/char/const char*)
+    function buildVarMap(codeText) {
+        const map = {};
+        const assignRegex = /(int|long|short|float|double|char|const\s+char\s*\*|char\s*\*)\s+([A-Za-z_]\w*)\s*=\s*([^;]+);/g;
+        let am;
+        while ((am = assignRegex.exec(codeText)) !== null) {
+            const name = am[2];
+            const val = am[3].trim();
+            const strLit = val.match(/^"((?:\\.|[^"\\])*)"$/s);
+            if (strLit) { map[name] = unescapeCStr(strLit[1]); continue; }
+            const charLit = val.match(/^'((?:\\.|[^'\\])*)'$/s);
+            if (charLit) { map[name] = unescapeCStr(charLit[1]); continue; }
+            const numLit = val.match(/^([-+]?\d+(?:\.\d+)?)/);
+            if (numLit) { map[name] = numLit[1]; }
+        }
+        return map;
+    }
+
+    // Helper: unescape de strings estilo C
+    function unescapeCStr(s) {
+        return s.replace(/\\n/g, '\n')
+                .replace(/\\r/g, '\r')
+                .replace(/\\t/g, '\t')
+                .replace(/\\\\/g, '\\')
+                .replace(/\\"/g, '"')
+                .replace(/\\'/g, "'");
+    }
+
+    // Helper: renderizar printf a partir de código (usa splitArgs, evalArg, buildVarMap)
+    function parsePrintfCalls(codeText) {
+        const calls = [];
+        const printfRegex = /printf\s*\(([^;]*?)\)\s*;/gs;
+        let m;
+        while ((m = printfRegex.exec(codeText)) !== null) {
+            calls.push(m[1]);
+        }
+        return calls;
+    }
+
+    function formatPrintfCall(inside, codeText) {
+        const args = splitArgs(inside);
+        if (args.length === 0) return null;
+        const first = args[0];
+        const fmtMatch = first.match(/^"((?:\\.|[^"\\])*)"$/s);
+        if (fmtMatch) {
+            const fmt = unescapeCStr(fmtMatch[1]);
+            const remaining = args.slice(1);
+            let argIndex = 0;
+            const varMap = buildVarMap(codeText);
+            return fmt.replace(/%[\d.]*[dfsciuoxX]/g, () => {
+                const val = evalArg(remaining[argIndex++] || '', varMap);
+                return (val === undefined) ? '[?]' : String(val);
+            });
+        } else {
+            const strLitRegex = /"((?:\\.|[^"\\])*)"/gs;
+            let parts = [];
+            let sm2;
+            while ((sm2 = strLitRegex.exec(inside)) !== null) {
+                parts.push(unescapeCStr(sm2[1]));
+            }
+            if (parts.length > 0) return parts.join('');
+            return '[saida dinamica: argumentos não avaliados]';
+        }
+    }
+
+    function renderPrintfFromCode(codeText) {
+        const calls = parsePrintfCalls(codeText);
+        const outputs = calls.map(inside => formatPrintfCall(inside, codeText)).filter(Boolean);
+        return outputs.join('\n');
+    }
+
+    // Helper: processar um caractere para splitArgs (reduce complexity in splitArgs)
+    function _processArgChar(ch, state, cur, args) {
+        if (state.esc) { cur += ch; state.esc = false; return { cur, state }; }
+        if (ch === '\\') { cur += ch; state.esc = true; return { cur, state }; }
+        if (state.inStr) {
+            cur += ch;
+            if (ch === state.strChar) { state.inStr = false; state.strChar = ''; }
+            return { cur, state };
+        }
+        if (ch === '"' || ch === "'") { state.inStr = true; state.strChar = ch; cur += ch; return { cur, state }; }
+        if (ch === '(') { state.depth++; cur += ch; return { cur, state }; }
+        if (ch === ')') {
+            if (state.depth > 0) state.depth--;
+            cur += ch;
+            return { cur, state };
+        }
+        if (ch === ',' && state.depth === 0) { args.push(cur.trim()); cur = ''; return { cur, state }; }
+        cur += ch;
+        return { cur, state };
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const themeToggle = document.getElementById('theme-toggle');
         const lightIcon = document.getElementById('theme-icon-light');
@@ -708,49 +881,12 @@ int main(void) {
         });
         const tocContainer = document.getElementById('table-of-contents');
         const bookContentContainer = document.getElementById('book-content-container');
-        let tocHTML = '';
-        bookData.parts.forEach((part) => {
-            tocHTML += `
-                <div>
-                    <h2 class="font-semibold text-gray-500 dark:text-gray-400 text-sm uppercase tracking-wider mb-2">${part.title}</h2>
-                    <ul class="space-y-1">
-                        ${part.sections.map(section => `
-                            <li><a href="#${section.id}" class="nav-link block text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-200 border-l-2 border-transparent pl-3">${section.title}</a></li>
-                        `).join('')}
-                    </ul>
-                </div>`;
-        });
-        if (tocContainer) {
-            tocContainer.innerHTML = tocHTML;
-        } else { console.warn('table-of-contents container not found'); }
-        if (bookContentContainer) {
-            bookContentContainer.innerHTML = bookData.contentHTML;
-        } else { console.warn('book-content-container not found'); }
+        // construir TOC e conteúdo do livro
+        buildTOC(bookData, tocContainer);
+        if (bookContentContainer) bookContentContainer.innerHTML = bookData.contentHTML; else console.warn('book-content-container not found');
+        // construir quiz
         const quizContainer = document.getElementById('quiz-container');
-        if (!quizContainer) { console.warn('quiz-container not found'); }
-        let quizHTML = '';
-        bookData.quiz.forEach((q, index) => {
-            quizHTML += `<div class="mb-6">
-                <h3 class="text-lg font-semibold mb-2">${index + 1}. ${q.question}</h3>
-                ${q.options.map((opt, i) => `<label class="block"><input type="radio" name="q${index}" value="${i}"> ${opt}</label>`).join('')}
-            </div>`;
-        });
-        quizHTML += '<button id="submit-quiz" class="bg-blue-500 text-white px-4 py-2 rounded">Verificar Respostas</button><div id="quiz-result" class="mt-4"></div>';
-        if (quizContainer) {
-            quizContainer.innerHTML = quizHTML;
-            const submitBtn = document.getElementById('submit-quiz');
-            if (submitBtn) {
-                submitBtn.addEventListener('click', () => {
-                    let score = 0;
-                    bookData.quiz.forEach((q, index) => {
-                        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-                        if (selected && parseInt(selected.value) === q.answer) score++;
-                    });
-                    const quizResult = document.getElementById('quiz-result');
-                    if (quizResult) quizResult.innerHTML = `Você acertou ${score} de ${bookData.quiz.length} perguntas.`;
-                });
-            }
-        }
+        buildQuiz(bookData, quizContainer);
         // Inicializar editor: Ace quando disponível, caso contrário fallback para textarea
         var editor = null;
         if (window.ace && typeof ace.edit === 'function') {
@@ -802,63 +938,25 @@ int main(void) {
             const modal = document.getElementById('result-modal');
             const modalOutput = document.getElementById('modal-output');
 
-            function unescapeCStr(s) {
-                return s.replace(/\\n/g, '\n')
-                        .replace(/\\r/g, '\r')
-                        .replace(/\\t/g, '\t')
-                        .replace(/\\\\/g, '\\')
-                        .replace(/\\"/g, '"')
-                        .replace(/\\'/g, "'");
-            }
-
             function simulatePrintfOutput(codeText) {
                 const outputs = [];
 
                 // 1) Construir mapa simples de variáveis (int/float/char/const char* / char*) com literais
-                const varMap = {};
-                // Helper: parse assignments of simple literals
-                const assignRegex = /(int|long|short|float|double|char|const\s+char\s*\*|char\s*\*)\s+([A-Za-z_]\w*)\s*=\s*([^;]+);/g;
-                function parseAssignmentValue(val) {
-                    val = val.trim();
-                    const strLit = val.match(/^"((?:\\.|[^"\\])*)"$/s);
-                    if (strLit) return unescapeCStr(strLit[1]);
-                    const charLit = val.match(/^'((?:\\.|[^'\\])*)'$/s);
-                    if (charLit) return unescapeCStr(charLit[1]);
-                    const numLit = val.match(/^([-+]?\d+(?:\.\d+)?)/);
-                    if (numLit) return numLit[1];
-                    return undefined;
-                }
-                let am;
-                while ((am = assignRegex.exec(codeText)) !== null) {
-                    const name = am[2];
-                    const parsed = parseAssignmentValue(am[3]);
-                    if (parsed !== undefined) varMap[name] = parsed;
-                }
+                // construir mapa de variáveis simples (delegado a buildVarMap)
+                const varMap = buildVarMap(codeText);
 
-                // Parser simples de argumentos: separa por vírgulas, respeitando strings e parênteses
+                // Parser simples de argumentos (moved out): separa por vírgulas, respeitando strings e parênteses
+                function initSplitState() { return { inStr: false, strChar: '', esc: false, depth: 0 }; }
+                function finalizeArg(cur, args) { if (cur.trim() !== '') args.push(cur.trim()); }
                 function splitArgs(s) {
                     const args = [];
                     let cur = '';
-                    let inStr = false;
-                    let strChar = '';
-                    let esc = false;
-                    let depth = 0;
-                    for (let i = 0; i < s.length; i++) {
-                        const ch = s[i];
-                        if (esc) { cur += ch; esc = false; continue; }
-                        if (ch === '\\') { cur += ch; esc = true; continue; }
-                        if (inStr) {
-                            cur += ch;
-                            if (ch === strChar) { inStr = false; strChar = ''; }
-                            continue;
-                        }
-                        if (ch === '"' || ch === "'") { inStr = true; strChar = ch; cur += ch; continue; }
-                        if (ch === '(') { depth++; cur += ch; continue; }
-                        if (ch === ')') { if (depth>0) depth--; cur += ch; continue; }
-                        if (ch === ',' && depth === 0) { args.push(cur.trim()); cur = ''; continue; }
-                        cur += ch;
+                    const state = initSplitState();
+                    for (const ch of s) {
+                        const res = _processArgChar(ch, state, cur, args);
+                        cur = res.cur;
                     }
-                    if (cur.trim() !== '') args.push(cur.trim());
+                    finalizeArg(cur, args);
                     return args;
                 }
 
@@ -875,28 +973,14 @@ int main(void) {
                     if (fmtMatch) {
                         const fmt = unescapeCStr(fmtMatch[1]);
                         const remaining = args.slice(1);
-                        // avaliar cada remaining usando varMap ou literais
-                        function evalArg(a) {
-                            if (!a) return '[?]';
-                            a = a.trim();
-                            // string literal
-                            const sm = a.match(/^"((?:\\.|[^"\\])*)"$/s);
-                            if (sm) return unescapeCStr(sm[1]);
-                            // char literal
-                            const cm = a.match(/^'((?:\\.|[^'\\])*)'$/s);
-                            if (cm) return unescapeCStr(cm[1]);
-                            // numeric literal
-                            const nm = a.match(/^([-+]?\d+(?:\.\d+)?)/);
-                            if (nm) return nm[1];
-                            // identifier variable
-                            const id = a.match(/^([A-Za-z_]\w*)$/);
-                            if (id && Object.prototype.hasOwnProperty.call(varMap, id[1])) return varMap[id[1]];
-                            return '[?]';
+                        // avaliar cada remaining usando varMap ou literais (usa helper evalArg)
+                        function evalArgLocal(a) {
+                            return evalArg(a, varMap);
                         }
                         // substituir especificadores na ordem
                         let argIndex = 0;
-                        const out = fmt.replace(/%[0-9\.]*[dfsciuoxX]/g, (spec) => {
-                            const val = evalArg(remaining[argIndex++] || '');
+                        const out = fmt.replace(/%[\d.]*[dfsciuoxX]/g, (spec) => {
+                            const val = evalArgLocal(remaining[argIndex++] || '');
                             return (val === undefined) ? '[?]' : String(val);
                         });
                         outputs.push(out);
@@ -941,7 +1025,8 @@ int main(void) {
                         }
                     }
                 } catch (e) {
-                    // falha na execução remota, ignorar e usar simulador local
+                    // falha na execução remota, registrar e usar simulador local
+                    console.warn('Remote execution failed, falling back to local simulator:', e);
                     executed = false;
                 }
 
