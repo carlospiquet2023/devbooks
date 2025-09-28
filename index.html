@@ -341,6 +341,23 @@
                             </div>
                         </a>
                     </div>
+                    <!-- IA Card -->
+                    <div class="book-card-container">
+                        <a href="ia.html" class="book-card block bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 p-6 group min-h-[400px]" aria-label="Mestre em IA Aplicada — abrir">
+                            <div class="relative">
+                                <div class="bg-gray-700 dark:bg-gray-900 rounded-md p-8 flex flex-col justify-center items-center h-80">
+                                    <svg class="w-24 h-24 text-gray-500 dark:text-gray-700 group-hover:text-indigo-500 transition-colors mb-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span class="text-4xl font-black text-gray-500 dark:text-gray-700 group-hover:text-indigo-500 transition-colors">IA</span>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="text-xl font-bold">Mestre em IA Aplicada</h3>
+                                    <p class="text-gray-600 dark:text-gray-400 mt-1">Da teoria ao deploy de LLMs</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -381,8 +398,8 @@
             <p>&copy; 2025 DevBooks. Todos os direitos reservados.</p>
             <p>Desenvolvido por Carlos Antonio de Oliveira Piquet - Email: carlospiquet.projetos@gmail.com</p>
             <div class="mt-4 space-x-4">
-                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline">Termos de Uso</a>
-                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline">Política de LGPD</a>
+                <a href="termos.html" class="text-blue-600 dark:text-blue-400 hover:underline text-xs">Termos de Uso</a>
+                <a href="lgpd.html" class="text-blue-600 dark:text-blue-400 hover:underline text-xs">Política de LGPD</a>
             </div>
         </div>
     </footer>
@@ -1079,16 +1096,16 @@ int main(void) {
 
         // Sistema de Progresso com localStorage
         function updateProgress() {
-            const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo', 'bonus', 'linux', 'nove', 'decimo'];
+            const pages = ['index', 'segundo', 'terceiro', 'quarto', 'quinto', 'sexto', 'setimo', 'bonus', 'linux', 'nove', 'decimo', 'ia'];
             let visited = 0;
             let quizzes = 0;
             pages.forEach(page => {
                 if (localStorage.getItem(`visited_${page}`)) visited++;
                 if (localStorage.getItem(`quiz_${page}`)) quizzes++;
             });
-            document.getElementById('pages-visited').textContent = `${visited}/11`;
-            document.getElementById('quizzes-completed').textContent = `${quizzes}/11`;
-            const totalProgress = ((visited + quizzes) / 22) * 100;
+            document.getElementById('pages-visited').textContent = `${visited}/12`;
+            document.getElementById('quizzes-completed').textContent = `${quizzes}/12`;
+            const totalProgress = ((visited + quizzes) / 24) * 100;
             document.getElementById('progress-bar').style.width = `${totalProgress}%`;
             document.getElementById('progress-text').textContent = totalProgress === 100 ? 'Parabéns! Você completou tudo!' : `Continue explorando para avançar!`;
         }
